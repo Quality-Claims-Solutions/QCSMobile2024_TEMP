@@ -1,0 +1,648 @@
+﻿@page "/FastTrack/{FnolId}"
+@using Blazorise.Localization
+@using AutoMapper
+@using Blazorise
+@using Blazorise.SignaturePad
+@using QCSMobile2024.Client.Components
+@using QCSMobile2024.Shared.Enums
+@using QCSMobile2024.Shared.Models.CustomModels
+@using QCSMobile2024.Shared.Models.EntityModels
+@using QCSMobile2024.Shared.Models.ViewModels
+@using QCSMobile2024.Shared.Services
+@using System.Text
+@using QCSMobile2024.Shared.Utilities
+
+@inject FastTrackService FastTrackService;
+@inject EncryptionService EncryptionService;
+@inject IMapper MappingProfile;
+@inject NavigationManager NavigationManager;
+
+@* Loading Animation *@
+@if (Loading)
+{
+    <Div Flex="Flex.JustifyContent.Center.AlignContent.Center" class="overlay">
+        <Div Class="spinner"></Div>
+    </Div>
+}
+
+@if (FnolViewModel != null)
+{
+    <FastTrackHeader />
+    <Row>
+        @*User information column*@
+        <Column ColumnSize="ColumnSize.Is12.OnMobile.Is12.OnTablet.Is12.OnDesktop.Is12.OnWidescreen.Is4.OnFullHD" Style="margin-bottom: 20px;">
+            <Heading TextSize="TextSize.Heading2" Style="margin-bottom: 20px;" TextAlignment="TextAlignment.Center" Class="fancy-text">
+                First Notice Information
+            </Heading>
+            <Row>
+                <Column>
+                    <Card>
+                        @if (!DisplayInsuredInfo)
+                        {
+                            <CardHeader TextAlignment="Blazorise.TextAlignment.Center">
+                                Claimant Info
+                            </CardHeader>
+                            <CardBody>
+                                <Row>
+                                    <Column>
+                                        <UnorderedList Unstyled TextAlignment="Blazorise.TextAlignment.Center">
+                                            <UnorderedListItem>
+                                                @FnolViewModel.ClaimantFirstName @FnolViewModel.ClaimantLastName
+                                            </UnorderedListItem>
+                                            <UnorderedListItem>
+                                                @FnolViewModel.ClaimantPhone
+                                            </UnorderedListItem>
+                                            <UnorderedListItem>
+                                                @FnolViewModel.ClaimantEmail
+                                            </UnorderedListItem>
+                                            @{
+                                                string formattedAddress = FormatAddress(FnolViewModel.ClaimantAddress, FnolViewModel.ClaimantCity, FnolViewModel.ClaimantState, FnolViewModel.ClaimantZip);
+                                            }
+                                            <UnorderedListItem>
+                                                @formattedAddress
+                                            </UnorderedListItem>
+                                        </UnorderedList>
+                                    </Column>
+                                </Row>
+                            </CardBody>
+                        }
+                        else
+                        {
+                            <CardHeader TextAlignment="Blazorise.TextAlignment.Center" Class="fancy-text">
+                                Insured Info
+                            </CardHeader>
+                            <CardBody>
+                                <Row>
+                                    <Column>
+                                        <UnorderedList Unstyled TextAlignment="Blazorise.TextAlignment.Center">
+                                            <UnorderedListItem>
+                                                @FnolViewModel.InsuredFirstName @FnolViewModel.InsuredLastName
+                                            </UnorderedListItem>
+                                            <UnorderedListItem>
+                                                @FnolViewModel.InsuredPrimaryPhone
+                                            </UnorderedListItem>
+                                            <UnorderedListItem>
+                                                @FnolViewModel.InsuredPrimaryEmail
+                                            </UnorderedListItem>
+                                            @{
+                                                string formattedAddress = FormatAddress(FnolViewModel.InsuredAddress, FnolViewModel.InsuredCity, FnolViewModel.InsuredState, FnolViewModel.InsuredZip);
+                                            }
+                                            <UnorderedListItem>
+                                                @formattedAddress
+                                            </UnorderedListItem>
+                                        </UnorderedList>
+                                    </Column>
+                                </Row>
+                            </CardBody>
+                        }
+                    </Card>
+                </Column>
+            </Row>
+            <br />
+            <Row>
+                <Column>
+                    <Card>
+                        <CardHeader TextAlignment="Blazorise.TextAlignment.Center" Class="fancy-text">
+                            Vehicle Info
+                        </CardHeader>
+                        <CardBody>
+                            <Row>
+                                <Column>
+                                    <UnorderedList Unstyled TextAlignment="Blazorise.TextAlignment.Center">
+                                        <UnorderedListItem>
+                                            @FnolViewModel.InsuredVehicleYear @FnolViewModel.InsuredVehicleMakeName @FnolViewModel.InsuredVehicleModel
+                                        </UnorderedListItem>
+                                        <UnorderedListItem ColumnSize="ColumnSize.Is12.OnMobile">
+                                            Vin: @FnolViewModel.InsuredVehicleVin
+                                        </UnorderedListItem>
+                                    </UnorderedList>
+                                </Column>
+                            </Row>
+                        </CardBody>
+                    </Card>
+                </Column>
+            </Row>
+            <br />
+            <Row>
+                <Column>
+                    <Card>
+                        <CardHeader TextAlignment="Blazorise.TextAlignment.Center" Class="fancy-text">
+                            <Row>
+                                <Column ColumnSize="ColumnSize.Is10.Is1.WithOffset">
+                                    Contact Info
+                                </Column>
+                                <Column ColumnSize="ColumnSize.Is1" Style="padding: 0px;">
+                                    <Icon Name="IconName.Edit" Clicked="EditInfo" />
+                                </Column>
+                            </Row>
+                        </CardHeader>
+                        <CardBody>
+                            <Row>
+                                <Column>
+                                    @if (!IsEditingContactInfo)
+                                    {
+                                        <UnorderedList Unstyled TextAlignment="Blazorise.TextAlignment.Center">
+                                            <UnorderedListItem>
+                                                @FnolViewModel.ContactFirstName @FnolViewModel.ContactLastName
+                                            </UnorderedListItem>
+                                            <UnorderedListItem>
+                                                @if (FnolViewModel.ContactPrimaryPhone != null)
+                                                {
+                                                    var formattedPhone = PhoneFormatter.FormatPhoneNumber(FnolViewModel.ContactPrimaryPhone);
+                                                    @formattedPhone
+                                                }
+                                            </UnorderedListItem>
+                                            <UnorderedListItem>
+                                                @FnolViewModel.ContactPrimaryEmail
+                                            </UnorderedListItem>
+                                            @{
+                                                string formattedAddress = FormatAddress(FnolViewModel.ContactAddress, FnolViewModel.ContactCity, FnolViewModel.ContactState, FnolViewModel.ContactZip);
+                                            }
+                                            <UnorderedListItem>
+                                                @formattedAddress
+                                            </UnorderedListItem>
+                                        </UnorderedList>
+                                    }
+                                    else
+                                    {
+                                        <Field Padding="Padding.Is1">
+                                            <TextEdit @bind-Text="@FnolViewModel.ContactFirstName" Size="Size.Small" Placeholder="First Name..." />
+                                        </Field>
+                                        <Field Padding="Padding.Is1">
+                                            <TextEdit @bind-Text="@FnolViewModel.ContactLastName" Size="Size.Small" Placeholder="Last Name..." />
+                                        </Field>
+                                        <Field Padding="Padding.Is1">
+                                            <TextEdit @bind-Text="@FnolViewModel.ContactPrimaryPhone" Size="Size.Small" Placeholder="Phone Number..." />
+                                        </Field>
+                                        <Field Padding="Padding.Is1">
+                                            <TextEdit @bind-Text="@FnolViewModel.ContactPrimaryEmail" Size="Size.Small" Placeholder="Email..." />
+                                        </Field>
+                                        <Field Padding="Padding.Is1">
+                                            <TextEdit @bind-Text="@FnolViewModel.ContactAddress" Size="Size.Small" Placeholder="Address..." />
+                                        </Field>
+                                        <Field Padding="Padding.Is1">
+                                            <TextEdit @bind-Text="@FnolViewModel.ContactCity" Size="Size.Small" Placeholder="City..." />
+                                        </Field>
+                                        <Field Padding="Padding.Is1">
+                                            <Select @bind-SelectedValue="@FnolViewModel.ContactState" Size="Size.Small">
+                                                <SelectItem TextColor="TextColor.Light" Value="0">State...</SelectItem>
+                                                @foreach (var state in StateList)
+                                                {
+                                                    <SelectItem Value="state.StateAbbreviation">@state.StateName</SelectItem>
+                                                }
+                                            </Select>
+                                        </Field>
+                                        <Field Padding="Padding.Is1">
+                                            <TextEdit @bind-Text="@FnolViewModel.ContactZip" Size="Size.Small" Placeholder="Zip..." />
+                                        </Field>
+
+                                        <Row>
+                                            <Column ColumnSize="ColumnSize.Is8.Is1.WithOffset">
+                                                <Button @onclick="() => IsEditingContactInfo = false" Class="bottom-button fancy-text btn-outline-primary">
+                                                    Finish Editing
+                                                </Button>
+                                            </Column>
+                                            <Column ColumnSize="ColumnSize.Is2" Style="padding: 0px;">
+                                                <Button Color="Color.Warning" @onclick="CancelEdit" Class="bottom-button fancy-text">
+                                                    <Icon Name="IconName.Times" />
+                                                </Button>
+                                            </Column>
+                                        </Row>
+
+                                    }
+                                </Column>
+                            </Row>
+                        </CardBody>
+                    </Card>
+                </Column>
+            </Row>
+            <br />
+
+            <Row>
+                <Column>
+                    <Card>
+                        <CardHeader TextAlignment="Blazorise.TextAlignment.Center" Class="fancy-text">
+                            Additional Remarks
+                        </CardHeader>
+                        <CardBody>
+                            @foreach (NoteViewModel note in FnolViewModel.Notes)
+                            {
+                                <Row>
+                                    <Column ColumnSize="ColumnSize.Is10.Is1.WithOffset">
+                                        <NoteDisplay Note="note" />
+                                    </Column>
+                                </Row>
+                            }
+                            <MemoEdit Rows="5" @bind-Text="@FnolViewModel.AdditionalRemarks" />
+                            <Row>
+                                <Column ColumnSize="ColumnSize.Is10.Is1.WithOffset">
+                                    <Button Clicked="AddRemark" Class="bottom-button fancy-text btn-outline-primary">
+                                        Add Remark
+                                    </Button>
+                                </Column>
+                            </Row>
+                        </CardBody>
+                    </Card>
+                </Column>
+            </Row>
+        </Column>
+
+        @*Photos Upload Column*@
+        <Column ColumnSize="ColumnSize.Is12.OnMobile.Is12.OnTablet.Is12.OnDesktop.Is12.OnWidescreen.Is8.OnFullHD" Style="margin-bottom: 10px;">
+            <PhotoHandler ImageList="FnolViewModel.FnolImageList" IsSubmitted="IsSubmitted" />
+        </Column>
+
+        @if (FnolViewModel.Signature != null)
+        {
+            <SignatureHandler Signature="FnolViewModel.Signature" />
+        }
+    </Row>
+
+    @if (!IsSubmitted)
+    {
+        <LayoutFooter Class="custom-footer">
+            <Row>
+                <Column ColumnSize="ColumnSize.Is10.Is1.WithOffset" Class="custom-footer-button-column">
+                    @if (FieldValidationError)
+                    {
+                        <Alert Color="Color.Danger" @bind-Visible="@FieldValidationError" @onclick="() => FieldValidationError = false">
+                            <Div Class="d-flex align-items-center justify-content-between"><Div>@(new MarkupString(ErrorStringFields))</Div> <Icon Name="IconName.Times" /></Div>
+                        </Alert>
+                    }
+                    @if (ImageValidationError)
+                    {
+                        <Alert Color="Color.Danger" @bind-Visible="@ImageValidationError" @onclick="() => ImageValidationError = false">
+                            <Div Class="d-flex align-items-center justify-content-between"><Div>@(new MarkupString(ErrorStringImages))</Div> <Icon Name="IconName.Times" /></Div>
+                        </Alert>
+                    }
+                    @if (SubmissionError)
+                    {
+                        <Alert Color="Color.Danger" @bind-Visible="@SubmissionError" @onclick="() => SubmissionError = false">
+                            <Div Class="d-flex align-items-center justify-content-between"><Div>Error Submitting</Div> <Icon Name="IconName.Times" /></Div>
+                        </Alert>
+                    }
+                    <Button Color="Color.Primary" Clicked="ApproveClicked" Class="bottom-button fancy-text">
+                        Approve & Submit
+                    </Button>
+                </Column>
+            </Row>
+        </LayoutFooter>
+    }
+    else
+    {
+        <LayoutFooter Class="custom-footer">
+            <Row>
+                <Column ColumnSize="ColumnSize.Is10.Is1.WithOffset" Class="custom-footer-button-column">
+                    <Button Color="Color.Success" Clicked="ApproveClicked" Class="bottom-button fancy-text" Disabled>
+                        Already Submitted!
+                    </Button>
+                </Column>
+            </Row>
+        </LayoutFooter>
+    }
+
+
+}
+<style>
+    .custom-select {
+        display: inline-block;
+        width: 100%;
+        height: calc(1.5em + .5rem + 2px);
+        padding: .25rem .5rem !important;
+        font-size: .875rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        vertical-align: middle;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+
+    .card-header {
+        background-color: #E8E8E8;
+    }
+
+    .logo {
+        width: 7rem;
+        height: 100%;
+    }
+
+    .spinner {
+        border: 16px solid silver;
+        border-top: 16px solid #337AB7;
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        animation: spin 700ms linear infinite;
+        left: 48%;
+        top: 50%;
+        position: fixed;
+        z-index: 9999;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg)
+        }
+
+        100% {
+            transform: rotate(360deg)
+        }
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background: black;
+        opacity: .5;
+        z-index: 999999;
+    }
+
+    .custom-signature {
+        width: 100% !important;
+        height: 250px !important background-color:orange;
+    }
+
+</style>
+
+@code {
+    [Parameter]
+    public string? FnolId { get; set; }
+
+    public FnolViewModel FnolViewModel { get; set; }
+    public UneditedContactInformation UneditedContactInformation { get; set; }
+
+    public bool DisplayInsuredInfo = false;
+
+    public bool IsEditingContactInfo = false;
+    public bool HasEditedContactInfo = false;
+    public bool FieldValidationError = false;
+    public bool ImageValidationError = false;
+    public bool IsSubmitted = false;
+    public bool SubmissionError = false;
+    public string ErrorStringFields = "";
+    public string ErrorStringImages = "";
+    bool Loading;
+    public List<StateInfo> StateList = DropdownList.GetStateInfo();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        Loading = true;
+        decimal fnolId;
+
+        if (decimal.TryParse(await EncryptionService.Decrypt(FnolId), out fnolId))
+        {
+            try
+            {
+                FnolViewModel = await FastTrackService.GetFnolViewModels(fnolId);
+                //Checks if we have enough Claimant information otherwise displays Insured info
+                if (String.IsNullOrEmpty(FnolViewModel.ClaimantLastName) && String.IsNullOrEmpty(FnolViewModel.ClaimantPhone) && String.IsNullOrEmpty(FnolViewModel.ClaimantEmail))
+                {
+                    DisplayInsuredInfo = true;
+                }
+
+                if (FnolViewModel.StatusTypeID != Convert.ToInt16(FnolStatusEnum.New))
+                {
+                    IsSubmitted = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                NavigationManager.NavigateTo("/FastTrack/FastTrackNotFound");
+            }
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/FastTrack/FastTrackNotFound");
+        }
+
+        Loading = false;
+    }
+
+
+    private async Task AddRemark()
+    {
+        if (!String.IsNullOrEmpty(FnolViewModel.AdditionalRemarks))
+        {
+            await FastTrackService.AddRemark(FnolViewModel);
+        }
+    }
+
+
+    private async Task ApproveClicked()
+    {
+        SubmissionError = false;
+        IsSubmitted = true;
+        Loading = true;
+
+        //Reset validation checks
+        FieldValidationError = false;
+        ImageValidationError = false;
+
+        //Builds Error string and sets Validation Error
+        ErrorStringImages = GetEmptyImages();
+        ErrorStringFields = GetEmptyFields();
+
+        if (FieldValidationError || ImageValidationError)
+        {
+            //On FieldValidationError opens up contact info card and enables editing
+            if (FieldValidationError)
+            {
+                EditInfo();
+            }
+
+            //On ImageValidationError alert pops up automatically
+            IsSubmitted = false;
+        }
+        else
+        {
+            FieldValidationError = false;
+            ImageValidationError = false;
+            //Update contact info
+            if (HasEditedContactInfo)
+            {
+                await FastTrackService.SaveFnolChanges(FnolViewModel);
+            }
+
+            //Handles FastTrack based on FastTrackFeatureTier
+            var response = await FastTrackService.ApproveFastTrack(FnolViewModel);
+
+            //Error on submit
+            if (!response.IsSuccessStatusCode)
+            {
+                IsSubmitted = false;
+                SubmissionError = true;
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/FastTrack/FastTrackSubmitted/" + FnolId);
+            }
+        }
+
+        Loading = false;
+        StateHasChanged();
+    }
+
+
+    private void CancelEdit()
+    {
+        IsEditingContactInfo = false;
+        HasEditedContactInfo = true;
+
+        FnolViewModel.ContactFirstName = UneditedContactInformation.ContactFirstName;
+        FnolViewModel.ContactLastName = UneditedContactInformation.ContactLastName;
+        FnolViewModel.ContactPrimaryPhone = UneditedContactInformation.ContactPrimaryPhone;
+        FnolViewModel.ContactPrimaryEmail = UneditedContactInformation.ContactPrimaryEmail;
+        FnolViewModel.ContactAddress = UneditedContactInformation.ContactAddress;
+        FnolViewModel.ContactCity = UneditedContactInformation.ContactCity;
+        FnolViewModel.ContactState = UneditedContactInformation.ContactState;
+        FnolViewModel.ContactZip = UneditedContactInformation.ContactZip;
+    }
+
+
+    private void EditInfo()
+    {
+        IsEditingContactInfo = true;
+        HasEditedContactInfo = true;
+
+        //map the values
+        UneditedContactInformation = new UneditedContactInformation
+            {
+                ContactFirstName = FnolViewModel.ContactFirstName,
+                ContactLastName = FnolViewModel.ContactLastName,
+                ContactPrimaryPhone = FnolViewModel.ContactPrimaryPhone,
+                ContactPrimaryEmail = FnolViewModel.ContactPrimaryEmail,
+                ContactAddress = FnolViewModel.ContactAddress,
+                ContactCity = FnolViewModel.ContactCity,
+                ContactState = FnolViewModel.ContactState,
+                ContactZip = FnolViewModel.ContactZip
+            };
+    }
+
+
+    string FormatAddress(string address, string city, string state, string zip)
+    {
+        StringBuilder addressString = new StringBuilder();
+        if (!string.IsNullOrEmpty(address))
+        {
+            addressString.Append(address);
+        }
+        if (!string.IsNullOrEmpty(city))
+        {
+            addressString.Append(!string.IsNullOrEmpty(addressString.ToString()) ? ", " : "").Append(city);
+        }
+        if (!string.IsNullOrEmpty(state) && state != "0")
+        {
+            addressString.Append(!string.IsNullOrEmpty(addressString.ToString()) ? ", " : "").Append(state);
+        }
+        if (!string.IsNullOrEmpty(zip))
+        {
+            addressString.Append(addressString.Length > 0 ? ", " : "").Append(zip);
+        }
+        return addressString.ToString();
+    }
+
+
+    public string GetEmptyFields()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append("<b>Contact info required: </b>");
+
+        if (string.IsNullOrEmpty(FnolViewModel.ContactFirstName))
+        {
+            sb.Append("First name, ");
+            FieldValidationError = true;
+        }
+
+        if (string.IsNullOrEmpty(FnolViewModel.ContactLastName))
+        {
+            sb.Append("Last name, ");
+            FieldValidationError = true;
+
+        }
+
+        if (string.IsNullOrEmpty(FnolViewModel.ContactPrimaryPhone))
+        {
+            sb.Append("Phone Number, ");
+            FieldValidationError = true;
+
+        }
+
+        if (string.IsNullOrEmpty(FnolViewModel.ContactPrimaryEmail))
+        {
+            sb.Append("Email, ");
+            FieldValidationError = true;
+
+        }
+
+        if (string.IsNullOrEmpty(FnolViewModel.ContactAddress))
+        {
+            sb.Append("Address, ");
+            FieldValidationError = true;
+
+        }
+
+        if (string.IsNullOrEmpty(FnolViewModel.ContactCity))
+        {
+            sb.Append("City, ");
+            FieldValidationError = true;
+
+        }
+
+        if (string.IsNullOrEmpty(FnolViewModel.ContactState) || FnolViewModel.ContactState == "0")
+        {
+            sb.Append("State, ");
+            FieldValidationError = true;
+        }
+
+        if (string.IsNullOrEmpty(FnolViewModel.ContactZip))
+        {
+            sb.Append("Zip, ");
+            FieldValidationError = true;
+        }
+
+        if (this.FnolViewModel.Signature.Stream == null)
+        {
+            sb.Append("Signature, ");
+            FieldValidationError = true;
+        }
+
+        // Remove the trailing comma and space if there are any empty fields
+        if (sb.Length > 0)
+        {
+            sb.Length -= 2; // Remove the last two characters
+        }
+
+        return sb.ToString();
+    }
+
+
+    public string GetEmptyImages()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append("<b>Images required: </b>");
+        foreach (var attachment in FnolViewModel.FnolImageList)
+        {
+            if (attachment.Stream == null)
+            {
+                ImageValidationError = true;
+                sb.Append($"{attachment.Title ?? ""}, ");
+            }
+        }
+
+        // Remove the trailing comma and space if there are any titles
+        if (sb.Length > 0)
+        {
+            sb.Length -= 2; // Remove the last two characters (comma and space)
+        }
+
+        return sb.ToString();
+    }
+}

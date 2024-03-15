@@ -1,0 +1,112 @@
+﻿@page "/FastTrack/FastTrackSubmitted/{FnolId}"
+@using QCSMobile2024.Client.Components
+@using QCSMobile2024.Shared.Models.ViewModels
+@using QCSMobile2024.Shared.Services
+
+@inject FastTrackService FastTrackService;
+@inject FileService FileService;
+@inject EncryptionService EncryptionService;
+@inject NavigationManager NavigationManager;
+@inject IJSRuntime JS;
+
+@if(FnolViewModel != null)
+{
+    <FastTrackHeader />
+    <Row TextAlignment="TextAlignment.Center">
+        <Column>
+            <h1 class="fancy-text custom-bold" style="margin-bottom: 30px;">Thank you!</h1>
+            <p class="fancy-text">Your Fast Track Claim has been updated and will be reviewed soon.</p>
+            <p class="fancy-text">Click here to download your Fast Track review PDF, or return to the Fast Track page.</p>
+        </Column>
+    </Row>
+    <Row TextAlignment="TextAlignment.Center">
+        <Column ColumnSize="ColumnSize.Is6.OnMobile.Is6.OnTablet.Is6.OnDesktop.Is6.OnWidescreen.Is3.OnFullHD.Is3.WithOffset.OnFullHD">
+            <Button Class="bottom-button fancy-text" Color="Color.Primary" Clicked="DownloadFile" Disabled="isDownloading">@DownloadButtonText</Button>
+        </Column>
+        <Column ColumnSize="ColumnSize.Is6.OnMobile.Is6.OnTablet.Is6.OnDesktop.Is6.OnWidescreen.Is3.OnFullHD">
+            <Button Class="bottom-button fancy-text" Color="Color.Primary" Clicked="BackToFastTrack">Back to Fast Track</Button>
+        </Column>
+    </Row>
+    <Row Class="custom-contant-footer" TextAlignment="TextAlignment.Center">
+        <Column>
+            <p class="fancy-text">Questions? Contact QCS Direct at CONTACT INFORMATION REQUIRED for more information.</p>
+        </Column>
+    </Row>
+}
+
+<style>
+    html {
+        height: 100%;
+    }
+
+    .custom-contant-footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        margin: 0px;
+        font-style: italic;
+        font-size: smaller;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public string? FnolId { get; set; }
+
+    private FnolViewModel FnolViewModel { get; set; }
+    private IJSObjectReference JSModule;
+    private string DownloadButtonText = "Download PDF";
+    private bool isDownloading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        decimal fnolId;
+
+        if (decimal.TryParse(await EncryptionService.Decrypt(FnolId), out fnolId))
+        {
+            try
+            {
+                FnolViewModel = await FastTrackService.GetFnolViewModels(fnolId);
+            }
+            catch (Exception ex)
+            {
+                NavigationManager.NavigateTo("/FastTrack/FastTrackNotFound");
+            }
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/FastTrack/FastTrackNotFound");
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            JSModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Pages/FastTrackSubmitted.razor.js");
+        }
+    }
+
+    private async Task DownloadFile()
+    {
+        isDownloading = true;
+        DownloadButtonText = "Downloading...";
+
+        var documentStream = await FileService.DownloadFile(FnolViewModel.FastTrackSummaryPdf, "Fnol_Vehicle");
+
+        using var streamRef = new DotNetStreamReference(stream: documentStream);
+
+        await JSModule.InvokeVoidAsync("DownloadFileFromStream", FnolViewModel.FastTrackSummaryPdf.FileName, streamRef);
+
+        streamRef.Dispose();
+
+        isDownloading = false;
+        DownloadButtonText = "Download PDF";
+    }
+
+    private void BackToFastTrack()
+    {
+        NavigationManager.NavigateTo("/FastTrack/" + FnolId);
+    }
+}

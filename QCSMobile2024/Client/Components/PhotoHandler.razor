@@ -1,0 +1,346 @@
+﻿@* @using QCSMobile2024.Shared.Models.ViewModels
+
+<Heading TextSize="TextSize.Heading2" Style="margin-bottom: 20px;" TextAlignment="TextAlignment.Center" Class="fancy-text">
+    Add Photos
+</Heading>
+
+<Row>
+    <Column ColumnSize="ColumnSize.Is12.OnMobile.Is12.OnTablet.Is6.OnDesktop.Is6.OnWidescreen.Is4.OnFullHD.Is1.WithOffset.OnFullHD">
+        <Row Class="image-thumbnail-row">
+            <Column Class="image-thumbnail-col">
+                @if (string.IsNullOrEmpty(ImageList[0].FileName))
+                {
+                    <Icon Name="IconName.ExclamationTriangle" Class="no-image-warning" />
+                }
+                else
+                {
+                    <Icon Name="IconName.CheckCircle" Class="has-image-checkbox" />
+                }
+                <Button Type="ButtonType.Button" Clicked="()=>SetCurrentImage(0)" Class="@ImageList[0].ThumbnailHtmlClass" id="@ImageList[0].ThumbnailHtmlId">@ImageList[0].Title</Button>
+            </Column>
+            <Column Class="image-thumbnail-col">
+                @if (string.IsNullOrEmpty(ImageList[1].FileName))
+                {
+                    <Icon Name="IconName.ExclamationTriangle" Class="no-image-warning" />
+                }
+                else
+                {
+                    <Icon Name="IconName.CheckCircle" Class="has-image-checkbox" />
+                }
+            <Button Type="ButtonType.Button" Clicked="()=>SetCurrentImage(1)" Class="@ImageList[1].ThumbnailHtmlClass" id="@ImageList[1].ThumbnailHtmlId">@ImageList[1].Title</Button>
+            </Column>
+            <Column Class="image-thumbnail-col">
+                @if (string.IsNullOrEmpty(ImageList[2].FileName))
+                {
+                    <Icon Name="IconName.ExclamationTriangle" Class="no-image-warning" />
+                }
+                else
+                {
+                    <Icon Name="IconName.CheckCircle" Class="has-image-checkbox" />
+                }
+            <Button Type="ButtonType.Button" Clicked="()=>SetCurrentImage(2)" Class="@ImageList[2].ThumbnailHtmlClass" id="@ImageList[2].ThumbnailHtmlId">@ImageList[2].Title</Button>
+            </Column>
+        </Row>
+        <Row Class="image-thumbnail-row">
+            <Column Class="image-thumbnail-col">
+                @if (string.IsNullOrEmpty(ImageList[3].FileName))
+                {
+                    <Icon Name="IconName.ExclamationTriangle" Class="no-image-warning" />
+                }
+                else
+                {
+                    <Icon Name="IconName.CheckCircle" Class="has-image-checkbox" />
+                }
+            <Button Type="ButtonType.Button" Clicked="()=>SetCurrentImage(3)" Class="@ImageList[3].ThumbnailHtmlClass" id="@ImageList[3].ThumbnailHtmlId">@ImageList[3].Title</Button>
+            </Column>
+            <Column Class="image-thumbnail-col">
+                @if (string.IsNullOrEmpty(ImageList[4].FileName))
+                {
+                    <Icon Name="IconName.ExclamationTriangle" Class="no-image-warning" />
+                }
+                else
+                {
+                    <Icon Name="IconName.CheckCircle" Class="has-image-checkbox" />
+                }
+            <Button Type="ButtonType.Button" Clicked="()=>SetCurrentImage(4)" Class="@ImageList[4].ThumbnailHtmlClass" id="@ImageList[4].ThumbnailHtmlId">@ImageList[4].Title</Button>
+            </Column>
+            <Column Class="image-thumbnail-col">
+                @if (string.IsNullOrEmpty(ImageList[5].FileName))
+                {
+                    <Icon Name="IconName.ExclamationTriangle" Class="no-image-warning" />
+                }
+                else
+                {
+                    <Icon Name="IconName.CheckCircle" Class="has-image-checkbox" />
+                }
+            <Button Type="ButtonType.Button" Clicked="()=>SetCurrentImage(5)" Class="@ImageList[5].ThumbnailHtmlClass" id="@ImageList[5].ThumbnailHtmlId">@ImageList[5].Title</Button>
+            </Column>
+        </Row>
+        <Row Class="image-thumbnail-row" Style="margin-bottom: 20px;">
+            <Column Class="image-thumbnail-col">
+                @if (string.IsNullOrEmpty(ImageList[6].FileName))
+                {
+                    <Icon Name="IconName.ExclamationTriangle" Class="no-image-warning" />
+                }
+                else
+                {
+                    <Icon Name="IconName.CheckCircle" Class="has-image-checkbox" />
+                }
+            <Button Type="ButtonType.Button" Clicked="()=>SetCurrentImage(6)" Class="@ImageList[6].ThumbnailHtmlClass" id="@ImageList[6].ThumbnailHtmlId">@ImageList[6].Title</Button>
+            </Column>
+            <Column Class="image-thumbnail-col">
+                @if (string.IsNullOrEmpty(ImageList[7].FileName))
+                {
+                    <Icon Name="IconName.ExclamationTriangle" Class="no-image-warning" />
+                }
+                else
+                {
+                    <Icon Name="IconName.CheckCircle" Class="has-image-checkbox" />
+                }
+            <Button Type="ButtonType.Button" Clicked="()=>SetCurrentImage(7)" Class="@ImageList[7].ThumbnailHtmlClass" id="@ImageList[7].ThumbnailHtmlId">@ImageList[7].Title</Button>
+            </Column>
+            <Column Class="image-thumbnail-col">
+                @if (string.IsNullOrEmpty(ImageList[8].FileName))
+                {
+                    <Icon Name="IconName.ExclamationTriangle" Class="no-image-warning" />
+                }
+                else
+                {
+                    <Icon Name="IconName.CheckCircle" Class="has-image-checkbox" />
+                }
+            <Button Type="ButtonType.Button" Clicked="()=>SetCurrentImage(8)" Class="@ImageList[8].ThumbnailHtmlClass" id="@ImageList[8].ThumbnailHtmlId">@ImageList[8].Title</Button>
+            </Column>
+        </Row>
+    </Column>
+    <Column ColumnSize="ColumnSize.Is12.OnMobile.Is12.OnTablet.Is6.OnDesktop.Is6.OnWidescreen.Is4.OnFullHD.Is1.WithOffset.OnFullHD">
+        <Row Class="@ImageClasses[0]">
+             <PhotoUpload ImageItem="ImageList[0]" SetImageClass="() => SetImageClass(ImageList[0])" PrepNextImage="PrepNextImage" IsSubmitted="IsSubmitted"/>
+        </Row>
+        <Row Class="@ImageClasses[1]">
+            <PhotoUpload ImageItem="ImageList[1]" SetImageClass="() => SetImageClass(ImageList[1])" PrepNextImage="PrepNextImage" IsSubmitted="IsSubmitted" />
+        </Row>
+        <Row Class="@ImageClasses[2]">
+            <PhotoUpload ImageItem="ImageList[2]" SetImageClass="() => SetImageClass(ImageList[2])" PrepNextImage="PrepNextImage" IsSubmitted="IsSubmitted" />
+        </Row>
+        <Row Class="@ImageClasses[3]">
+            <PhotoUpload ImageItem="ImageList[3]" SetImageClass="() => SetImageClass(ImageList[3])" PrepNextImage="PrepNextImage" IsSubmitted="IsSubmitted" />
+        </Row>
+        <Row Class="@ImageClasses[4]">
+            <PhotoUpload ImageItem="ImageList[4]" SetImageClass="() => SetImageClass(ImageList[4])" PrepNextImage="PrepNextImage" IsSubmitted="IsSubmitted" />
+        </Row>
+        <Row Class="@ImageClasses[5]">
+            <PhotoUpload ImageItem="ImageList[5]" SetImageClass="() => SetImageClass(ImageList[5])" PrepNextImage="PrepNextImage" IsSubmitted="IsSubmitted" />
+        </Row>
+        <Row Class="@ImageClasses[6]">
+            <PhotoUpload ImageItem="ImageList[6]" SetImageClass="() => SetImageClass(ImageList[6])" PrepNextImage="PrepNextImage" IsSubmitted="IsSubmitted" />
+        </Row>
+        <Row Class="@ImageClasses[7]">
+            <PhotoUpload ImageItem="ImageList[7]" SetImageClass="() => SetImageClass(ImageList[7])" PrepNextImage="PrepNextImage" IsSubmitted="IsSubmitted" />
+        </Row>
+        <Row Class="@ImageClasses[8]">
+            <PhotoUpload ImageItem="ImageList[8]" SetImageClass="() => SetImageClass(ImageList[8])" PrepNextImage="PrepNextImage" IsSubmitted="IsSubmitted" />
+        </Row>
+    </Column>
+</Row>
+
+<style>
+    .image-thumbnail:hover {
+        color: white;
+        font-weight: 600;
+    }
+
+    .current-selection {
+        border-color: var(--branded-selection-color) !important;
+        border-width: thick !important;
+        font-weight: 600;
+    }
+
+    .image-show {
+        display: block;
+        margin: 0 auto;
+    }
+
+    .image-hide {
+        display: none;
+        margin: 0 auto;
+    }
+
+    .image-thumbnail {
+        width: 100px;
+        height: 100px;
+        background-position: center !important;
+        background-size: cover !important;
+        border-width: medium;
+        color: white;
+    }
+
+    .image-thumbnail-col {
+        padding: 0px;
+        text-align: center;
+    }
+
+    .image-thumbnail-row {
+        margin-bottom: 10px;        
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+
+    .has-image {
+        border-color: var(--branded-secondary-color);
+    }
+
+    .has-image-checkbox {
+        color: var(--branded-secondary-color);
+        position: absolute;
+    }
+
+    .no-image {
+        border-color: var(--branded-warning-color);
+    }
+
+    .no-image-warning {
+        color: var(--branded-warning-color);
+        position: absolute;
+    }
+
+    .front-right-default {
+        background: 
+            linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+            url('Content/front_right.jpg');
+    }
+
+    .front-left-default {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('Content/front_left.jpg');
+    }
+
+    .rear-right-default {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('Content/rear_right.jpg');
+    }
+
+    .rear-left-default {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('Content/rear_left.jpg');
+    }
+
+    .vin-default {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('Content/vin.jpg');
+    }
+
+    .odometer-default {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('Content/odometer.jpg');
+    }
+
+    .damage-default {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('Content/damage.jpg');
+    }
+</style>
+
+    @code {
+    [Parameter]
+    public List<FileAttachmentViewModel> ImageList { get; set; }
+
+    [Parameter]
+    public bool IsSubmitted { get; set; }
+
+    int CurrentImageIndex = 0;
+
+    private List<string> ImageClasses = new List<string> { "image-show", "image-hide", "image-hide", "image-hide", "image-hide", "image-hide", "image-hide", "image-hide", "image-hide" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        SetCurrentImage(CurrentImageIndex);
+
+        foreach(FileAttachmentViewModel image in ImageList)
+        {
+            SetImageClass(image);
+        }
+    }
+
+    private void SetCurrentImage(int imageNumber)
+    {
+        // set all ImageClasses to image-hide
+        ImageClasses = ImageClasses.Select(x => "image-hide").ToList();
+
+        foreach(FileAttachmentViewModel image in ImageList)
+        {
+            image.ThumbnailHtmlClass = image.ThumbnailHtmlClass.Replace(" current-selection", "");
+        }
+
+        // set the current image to image-show
+        ImageClasses[imageNumber] = "image-show";
+        ImageList[imageNumber].ThumbnailHtmlClass += " current-selection";
+        CurrentImageIndex = imageNumber;
+    }
+
+    //<summary>
+    // This is a callback function that is called from PhotoUpload.razor to set classes on the image thumbnail after an image upload/retake requested.
+    //</summary>
+    private void SetImageClass(FileAttachmentViewModel image)
+    {
+        image.ThumbnailHtmlClass = string.IsNullOrEmpty(image.FileName) ? image.ThumbnailHtmlClass.Replace("has-image", "no-image") : image.ThumbnailHtmlClass.Replace("no-image", "has-image");
+        image.ThumbnailHtmlClass = string.IsNullOrEmpty(image.FileName) ? image.ThumbnailHtmlClass.Replace("has-image", "no-image") : image.ThumbnailHtmlClass.Replace("no-image", "has-image");
+        if (string.IsNullOrEmpty(image.FileName)) // no file is present
+        {
+            image.ThumbnailHtmlClass = image.ThumbnailHtmlClass.Replace("has-image", "no-image");
+            if (image.Title.Contains("Front Right"))
+            {
+                image.ThumbnailHtmlClass += " front-right-default";
+            }
+            else if (image.Title.Contains("Front Left"))
+            {
+                image.ThumbnailHtmlClass += " front-left-default";
+            }
+            else if (image.Title.Contains("Back Right"))
+            {
+                image.ThumbnailHtmlClass += " rear-left-default";
+            }
+            else if (image.Title.Contains("Back Left"))
+            {
+                image.ThumbnailHtmlClass += " rear-left-default";
+            }
+            else if (image.Title.Contains("VIN"))
+            {
+                image.ThumbnailHtmlClass += " vin-default";
+            }
+            else if (image.Title.Contains("odometer"))
+            {
+                image.ThumbnailHtmlClass += " odometer-default";
+            }
+            else
+            {
+                image.ThumbnailHtmlClass += " damage-default";
+            }
+        }
+        else // a file is present
+        {
+            image.ThumbnailHtmlClass = image.ThumbnailHtmlClass.Replace("no-image", "has-image")
+                                                                .Replace(" front-right-default", "")
+                                                                .Replace(" front-left-default", "")
+                                                                .Replace(" rear-right-default", "")
+                                                                .Replace(" rear-left-default", "")
+                                                                .Replace(" vin-default", "")
+                                                                .Replace(" odometer-default", "")
+                                                                .Replace(" damage-default", "");
+        }
+    }
+
+    private void PrepNextImage()
+    {
+        if (ImageList.Any(x => string.IsNullOrEmpty(x.FileName)))
+        {
+            for(int x = CurrentImageIndex; x < ImageList.Count; x++)
+            {
+                if (string.IsNullOrEmpty(ImageList[x].FileName))
+                {
+                    SetCurrentImage(x);
+                    break;
+                }
+
+                if (x == ImageList.Count - 1)
+                {
+                    x = 0;
+                }
+            }
+        }
+    }
+}
+ *@

@@ -1,0 +1,33 @@
+﻿@page "/FastTrack/FastTrackNotFound"
+@using QCSMobile2024.Client.Components
+
+
+
+<FastTrackHeader />
+<Row TextAlignment="TextAlignment.Center">
+    <Column>
+        <h1 class="fancy-text">Oops, we don't have that one..</h1>
+        <p class="fancy-text">Sorry, the Fast Track Claim you are looking for does not exist.</p>
+    </Column>
+</Row>
+<Row Class="custom-contant-footer" TextAlignment="TextAlignment.Center">
+    <Column>
+        <p class="fancy-text">Questions? Contact QCS Direct at CONTACT INFORMATION REQUIRED for more information.</p>
+    </Column>
+</Row>
+
+<style>
+    html {
+        height: 100%;
+    }
+
+    .custom-contant-footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        margin: 0px;
+        font-style: italic;
+        font-size: smaller;
+    }
+</style>

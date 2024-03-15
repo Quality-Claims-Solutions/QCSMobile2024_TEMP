@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazorise" Version="1.4.3" />
+    <PackageReference Include="Blazorise.Bootstrap" Version="1.4.3" />
+    <PackageReference Include="Blazorise.Components" Version="1.4.3" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.4.3" />
+    <PackageReference Include="Blazorise.SignaturePad" Version="1.4.3" />
+    <PackageReference Include="BouncyCastle.NetCore" Version="2.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.17" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\QCSMobile2024.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

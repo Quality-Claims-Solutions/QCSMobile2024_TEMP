@@ -1,0 +1,281 @@
+﻿@* @using Blazorise
+@using QCSMobile2024.Shared.Models.ViewModels
+@using QCSMobile2024.Shared.Services
+@using Serilog
+@using System.Runtime.CompilerServices
+
+@inject IJSRuntime JS;
+@inject FileService FileService;
+
+<Row Class="image-input-external-container">
+    <Column Class="image-input-internal-container" id="@ImageItem.Title">
+        <Row Class="image-label">
+            <Column ColumnSize="ColumnSize.Is8.Is2.WithOffset" Class="image-label-title">
+                @ImageItem.Title
+            </Column>
+            <Column>
+                @if(!IsSubmitted)
+                {
+                    <Icon Name="IconName.Redo" Clicked="ClearImage" />
+                }
+            </Column>
+        </Row>
+        <Div>
+            <Icon Name="IconName.Check" IconSize="IconSize.x10" Class="@CheckboxCSS"/>
+        </Div>
+        @if(ImageItem.FileName == null)
+        {
+            <Div Class="image-input-zone">
+                <InputFile OnChange="@((InputFileChangeEventArgs args) => OnChange(args))" capture />
+            </Div>
+        }
+    </Column>
+</Row>
+
+<style>
+    .checkbox-position {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: transparent;
+        opacity: 0;
+        background-clip: text;
+        background: linear-gradient(90deg, rgba(0,255,0,1) 0%, rgba(234,255,19,1) 25%, rgba(0,255,0,1) 100%);
+        background-size: 200%;
+    }
+
+    .checkbox-animation {
+        animation: fadeLeftToRight 2s linear forwards;
+    }
+
+    @@keyframes fadeLeftToRight {
+        0% {
+            opacity: 0;
+            background-position: 100% 50%;
+            background-clip: text;
+        }
+
+        10% {
+            opacity: 1;
+        }
+
+        20% {
+            background-position: 100% 50%;
+            background-clip: text;
+        }
+
+        35% {
+            background-position: -100% 50%;
+            background-clip: text;
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+            background-position: -100% 50%;
+            background-clip: text;
+        }
+    }
+
+    .checkbox-hidden {
+        visibility: hidden;
+    }
+
+    .checkbox-visible {
+        visibility: visible;
+    }
+
+    .image-input-zone {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        color: gray;
+        cursor: pointer;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 150px;
+        padding: 0px;
+        overflow: hidden;
+    }
+
+        .image-input-zone input[type=file] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+    .image-input-external-container {
+        margin-left: 0px;
+        margin-right: 0px;
+        margin: 0 auto;
+        bs-gutter-x: 0px;
+        aspect-ratio: 3/4;
+        margin-bottom: 50px;
+        border-radius: 5px;
+        max-height: 60vh;
+        max-width: 45vh;
+    }
+
+    .image-input-internal-container {
+        border-style: solid;
+        border-color: gray;
+        border-width: 1px;
+        background-image: url('Content/default_upload.png');
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        border-radius: 5px;
+    }
+
+    .image-label {
+        text-align: center;
+        background-color: gray;
+        border-radius: 0px 0px 5px 5px;
+        color: white;
+        opacity: 75%;
+        font-size: larger;
+    }
+
+    .image-label-title {
+        animation: flashText 1s linear forwards;
+    }
+
+    @@keyframes flashText {
+        0% {
+            color: white;
+        }
+
+        25% {
+            color: orange;
+        }
+
+        50% {
+            color:white
+        }
+
+        75% {
+            color: orange;
+        }
+
+        100% {
+            color: white;
+        }
+    }
+
+</style>
+
+@code {
+    [Parameter]
+    public FileAttachmentViewModel ImageItem { get; set; }
+
+    [Parameter]
+    public EventCallback SetImageClass { get; set; }
+
+    [Parameter]
+    public EventCallback PrepNextImage { get; set; }
+
+    [Parameter]
+    public bool IsSubmitted { get; set; }
+
+    private string CheckboxCSS = "checkbox-position";
+
+    static string MethodName([CallerMemberName] string name = null) => name;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // If existing, populate images.
+        if (firstRender)
+        {
+            if (!string.IsNullOrEmpty(ImageItem.FileName))
+            {
+                //Get the original image stream from the server.
+                Stream fullStream = await FileService.DownloadFile(ImageItem, "Fnol_Vehicle");
+                var streamRef = new DotNetStreamReference(fullStream);
+                await JS.InvokeVoidAsync("setImage", ImageItem.Title, streamRef);
+
+                ImageItem.Stream = ((MemoryStream)fullStream).ToArray();
+                ImageItem.ContentType = "image/png";
+            }
+        }
+    }
+
+    private async Task OnChange(InputFileChangeEventArgs e)
+    {
+        Log.Information($"{MethodName()} Start.");
+
+        var files = e.GetMultipleFiles(); // get the files selected by the users
+
+        foreach (var imageFile in files)
+        {
+            try
+            {
+                // create a byte buffer with the size of the image file
+                var buf = new byte[imageFile.Size];
+
+                // create a memory stream to store the image data
+                using (var memoryStream = new MemoryStream())
+                {
+                    // copy the image data from the input stream to the memory stream
+                    await imageFile.OpenReadStream(maxAllowedSize: 5000000).CopyToAsync(memoryStream).ConfigureAwait(false);
+
+                    // convert the memory stream to a byte array and store in the buffer
+                    buf = memoryStream.ToArray();
+
+                    // Using the memory stream to set the thumbnail image.
+                    memoryStream.Position = 0;
+                    var streamRef = new DotNetStreamReference(memoryStream);
+                    await JS.InvokeVoidAsync("setImage", ImageItem.Title, streamRef);
+
+                }
+
+                // Record the information.
+                ImageItem.Stream = buf;
+                ImageItem.FileName = imageFile.Name;
+                ImageItem.ContentType = imageFile.ContentType;
+                ImageItem.DateEntered = DateTime.Now;
+
+                await HandleUIUpdates();
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"{MethodName()}: Something went wrong on file addition. Exception: {ex.Message}");
+            }
+        }
+
+        // await InvokeAsync(StateHasChanged);
+
+        Log.Information($"{MethodName()} End.");
+    }
+
+    private async Task HandleUIUpdates()
+    {
+        await SetImageClass.InvokeAsync();
+        CheckboxCSS = CheckboxCSS += " checkbox-animation";
+        await InvokeAsync(StateHasChanged);
+
+        await Task.Delay(2000);
+        await PrepNextImage.InvokeAsync();
+    }
+
+    private async void ClearImage()
+    {
+        ImageItem.Stream = null;
+        ImageItem.FileName = null;
+        ImageItem.ContentType = null;
+
+        // Javascript that resets background images to defaults
+        await JS.InvokeVoidAsync("resetImage", ImageItem.Title);
+
+        // Reset CSS for the current image.
+        CheckboxCSS = CheckboxCSS.Replace(" checkbox-animation", "");
+
+        // reset CSS for thumbnails
+        await SetImageClass.InvokeAsync();
+    }
+}
+ *@

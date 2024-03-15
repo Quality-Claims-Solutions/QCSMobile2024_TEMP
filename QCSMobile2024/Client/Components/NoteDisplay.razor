@@ -1,0 +1,43 @@
+﻿@using QCSMobile2024.Shared.Models.ViewModels
+<Div Class="fancy-text custom-div">
+    <Row Class="info-row">
+        <Column>
+            @Note.Username
+        </Column>
+        <Column Class="timestamp">
+            @Note.TimeStamp.ToShortDateString()
+        </Column>
+    </Row>
+    <Row Class="content-row">
+        <Column>
+            @Note.NoteText
+        </Column>
+    </Row>
+</Div>
+
+<style>
+    .info-row {
+        padding-bottom: 0px !important;
+        font-size: large;
+    }
+
+    .content-row {
+        font-style: italic;
+        padding-top: .2rem !important;
+        margin-left: 2px;
+        border-left: 2px solid var(--branded-secondary-color);
+    }
+
+    .custom-div {
+        margin-bottom: 10px;
+    }
+
+    .timestamp {
+        text-align: right;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public NoteViewModel Note { get; set; }
+}
