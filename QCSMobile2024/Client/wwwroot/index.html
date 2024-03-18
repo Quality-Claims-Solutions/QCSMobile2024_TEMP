@@ -27,6 +27,62 @@
         <a class="dismiss">🗙</a>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
+
+    <!--Custom scripts-->
+    <script>
+        window.setImage = async (imageElementId, imageStream) => {
+            const arrayBuffer = await imageStream.arrayBuffer();
+            const blob = new Blob([arrayBuffer]);
+            const url = URL.createObjectURL(blob);
+            const image = document.getElementById(imageElementId);
+
+            if (image) {
+                image.onload = () => {
+                    URL.revokeObjectURL(url);
+                }
+                image.src = url;
+                image.style.backgroundImage = "url('" + url + "')";
+            }
+
+            const imageThumbnail = document.getElementById(imageElementId + "-thumbnail");
+
+            if (imageThumbnail) {
+                imageThumbnail.onload = () => {
+                    URL.revokeObjectURL(url);
+                }
+                imageThumbnail.src = url;
+                imageThumbnail.style.backgroundImage = "url('" + url + "')";
+            }
+        };
+
+        window.resetImage = async (imageElementId) => {
+            const image = document.getElementById(imageElementId);
+            if (image) {
+                image.src = "Content/default_upload.png";
+                image.style.backgroundImage = "url('Content/default_upload.png')";
+            }
+
+            const imageThumbnail = document.getElementById(imageElementId + "-thumbnail");
+
+            var imageName = imageElementId.toLowerCase().replace(" ", "_");
+
+            if (imageName.includes("damage")) {
+                imageThumbnail.src = "Content/damage.jpg";
+                imageThumbnail.style.backgroundImage = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('Content/damage.jpg')";
+            }
+            else {
+                imageThumbnail.src = "Content/" + imageName + ".jpg";
+                imageThumbnail.style.backgroundImage = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('Content/" + imageName + ".jpg')";
+            }
+        };
+
+        window.resetSignature = async () => {
+            const signature = document.getElementById("Signature");
+            if (signature) {
+                signature.style.backgroundImage = "none";
+            }
+        };
+    </script>
 </body>
 
 </html>
