@@ -106,81 +106,81 @@ namespace QCSMobile2024.Shared.Models.ViewModels
 
         public void InitializeImages()
         {
-            //FnolImageList =
-            //[
-            //    new FileAttachmentViewModel()
-            //    {
-            //        Title = "Front Right",
-            //        FnolId = (int)this.FnolID,
-            //        ThumbnailHtmlClass = "image-thumbnail no-image front-right-default",
-            //        ChangeTypeId = 2,
-            //        PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Right_Front)
-            //    },
-            //    new FileAttachmentViewModel()
-            //    {
-            //        Title = "Front Left",
-            //        FnolId = (int)this.FnolID,
-            //        ThumbnailHtmlClass = "image-thumbnail no-image front-left-default",
-            //        ChangeTypeId = 2,
-            //        PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Left_Front)
-            //    },
-            //    new FileAttachmentViewModel()
-            //    {
-            //        Title = "Rear Right",
-            //        FnolId = (int)this.FnolID,
-            //        ThumbnailHtmlClass = "image-thumbnail no-image rear-right-default",
-            //        ChangeTypeId = 2,
-            //        PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Right_Rear)
-            //    },
-            //    new FileAttachmentViewModel()
-            //    {
-            //        Title = "Rear Left",
-            //        FnolId = (int)this.FnolID,
-            //        ThumbnailHtmlClass = "image-thumbnail no-image rear-left-default",
-            //        ChangeTypeId = 2,
-            //        PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Left_Rear)
-            //    },
-            //    new FileAttachmentViewModel()
-            //    {
-            //        Title = "VIN",
-            //        FnolId = (int)this.FnolID,
-            //        ThumbnailHtmlClass = "image-thumbnail no-image vin-default",
-            //        ChangeTypeId = 2,
-            //        PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.VIN)
-            //    },
-            //    new FileAttachmentViewModel()
-            //    {
-            //        Title = "Odometer",
-            //        FnolId = (int)this.FnolID,
-            //        ThumbnailHtmlClass = "image-thumbnail no-image odometer-default",
-            //        ChangeTypeId = 2,
-            //        PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Odometer)
-            //    },
-            //    new FileAttachmentViewModel()
-            //    {
-            //        Title = "Damage Photo 1",
-            //        FnolId = (int)this.FnolID,
-            //        ThumbnailHtmlClass = "image-thumbnail no-image damage-default",
-            //        ChangeTypeId = 2,
-            //        PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Damage_Area)
-            //    },
-            //    new FileAttachmentViewModel()
-            //    {
-            //        Title = "Damage Photo 2",
-            //        FnolId = (int)this.FnolID,
-            //        ThumbnailHtmlClass = "image-thumbnail no-image damage-default",
-            //        ChangeTypeId = 2,
-            //        PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Damage_Area)
-            //    },
-            //    new FileAttachmentViewModel()
-            //    {
-            //        Title = "Damage Photo 3",
-            //        FnolId = (int)this.FnolID,
-            //        ThumbnailHtmlClass = "image-thumbnail no-image damage-default",
-            //        ChangeTypeId = 2,
-            //        PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Damage_Area)
-            //    }
-            //];
+            FnolImageList = new List<FileAttachmentViewModel>
+            {
+                new FileAttachmentViewModel
+                {
+                    Title = "Front Right",
+                    FnolId = (int)this.FnolID,
+                    ThumbnailHtmlClass = "image-thumbnail no-image front-right-default",
+                    ChangeTypeId = 2,
+                    PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Right_Front)
+                },
+                new FileAttachmentViewModel
+                {
+                    Title = "Front Left",
+                    FnolId = (int)this.FnolID,
+                    ThumbnailHtmlClass = "image-thumbnail no-image front-left-default",
+                    ChangeTypeId = 2,
+                    PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Left_Front)
+                },
+                new FileAttachmentViewModel
+                {
+                    Title = "Rear Right",
+                    FnolId = (int)this.FnolID,
+                    ThumbnailHtmlClass = "image-thumbnail no-image rear-right-default",
+                    ChangeTypeId = 2,
+                    PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Right_Rear)
+                },
+                new FileAttachmentViewModel
+                {
+                    Title = "Rear Left",
+                    FnolId = (int)this.FnolID,
+                    ThumbnailHtmlClass = "image-thumbnail no-image rear-left-default",
+                    ChangeTypeId = 2,
+                    PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Left_Rear)
+                },
+                new FileAttachmentViewModel
+                {
+                    Title = "VIN",
+                    FnolId = (int)this.FnolID,
+                    ThumbnailHtmlClass = "image-thumbnail no-image vin-default",
+                    ChangeTypeId = 2,
+                    PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.VIN)
+                },
+                new FileAttachmentViewModel
+                {
+                    Title = "Odometer",
+                    FnolId = (int)this.FnolID,
+                    ThumbnailHtmlClass = "image-thumbnail no-image odometer-default",
+                    ChangeTypeId = 2,
+                    PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Odometer)
+                },
+                new FileAttachmentViewModel
+                {
+                    Title = "Damage Photo 1",
+                    FnolId = (int)this.FnolID,
+                    ThumbnailHtmlClass = "image-thumbnail no-image damage-default",
+                    ChangeTypeId = 2,
+                    PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Damage_Area)
+                },
+                new FileAttachmentViewModel
+                {
+                    Title = "Damage Photo 2",
+                    FnolId = (int)this.FnolID,
+                    ThumbnailHtmlClass = "image-thumbnail no-image damage-default",
+                    ChangeTypeId = 2,
+                    PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Damage_Area)
+                },
+                new FileAttachmentViewModel
+                {
+                    Title = "Damage Photo 3",
+                    FnolId = (int)this.FnolID,
+                    ThumbnailHtmlClass = "image-thumbnail no-image damage-default",
+                    ChangeTypeId = 2,
+                    PhotosExpressAttachmentTypeID = Convert.ToInt16(PhotosExpressAttachmentTypeEnum.Damage_Area)
+                }
+            };
         }
     }
 
