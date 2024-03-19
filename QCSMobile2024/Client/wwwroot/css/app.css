@@ -1,4 +1,62 @@
-@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+/*@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');*/
+
+/*FRONT SECTION*/
+@font-face {
+    font-family: 'ComicSans';
+    src: url('fonts/OpenSans-Regular.ttf') format('truetype');
+}
+
+.fancy-text {
+    font-family: 'ComicSans', sans-serif;
+}
+
+/*REGULAR CSS*/
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/*Custom Section*/
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.bottom-button {
+    margin: 5px 0;
+    padding: 10px !important;
+    width: 100%;
+    height: 50px;
+    font-weight: bold !important;
+}
+
+.custom-bold {
+    font-weight: bold;
+}
+
+.custom-footer {
+    position: sticky;
+    bottom: 0px;
+    background: transparent;
+    z-index: 999;
+    pointer-events: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.custom-footer-button-column {
+    pointer-events: auto;
+}
+
+.custom-row-no-margin {
+    margin: 0px;
+}
+
+.custom-card-header {
+    font-family: 'ComicSans', sans-serif;
+    font-size: large;
+    font-weight: bold;
+}
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -99,3 +157,15 @@ a, .btn-link {
     .loading-progress-text:after {
         content: var(--blazor-load-percentage-text, "Loading");
     }
+
+:root {
+    --branded-primary-color: #152235;
+    --branded-secondary-color: #1B96D5;
+    --branded-light-primary-color: #F0F4F9;
+    --branded-light-gray-color: #E8E8E8;
+    --branded-validation-color: #35979C;
+    --branded-alert-color: #DBF0FB;
+    --branded-warning-color: #FFA500;
+    --branded-danger-color: #C42021;
+    --branded-selection-color: #73AB84;
+}
