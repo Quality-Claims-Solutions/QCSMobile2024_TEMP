@@ -350,7 +350,7 @@ namespace QCSMobile2024.Shared.Services
                 FnolViewModel.Signature = _mapper.Map(fnolAttachments.Where(file => file.Description == "Signature").FirstOrDefault(), FnolViewModel.Signature);
 
                 // Set FastTrackSummaryPdf to the FastTrackSummary attachment
-                FnolViewModel.FastTrackSummaryPdf = _mapper.Map(fnolAttachments.Where(file => file.Description.Contains("FastTrack")).FirstOrDefault(), FnolViewModel.FastTrackSummaryPdf);
+                FnolViewModel.FastTrackSummaryPdf = _mapper.Map(fnolAttachments.Where(file => file.Description == "FastTrack").FirstOrDefault(), FnolViewModel.FastTrackSummaryPdf);
 
                 // Try to match Fnol_Attachments to their corresponding place in the image list.
                 if (fnolAttachments != null)
