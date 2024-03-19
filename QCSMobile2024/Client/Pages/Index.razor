@@ -1,9 +1,36 @@
 ﻿@page "/"
+@using QCSMobile2024.Client.Components
 
-<PageTitle>Index</PageTitle>
+<FastTrackHeader />
+<Row TextAlignment="TextAlignment.Center" Class="information">
+    <Column>
+        <h1 class="fancy-text">Hello!</h1>
+        <h2 class="fancy-text">Thank you for using QCS Direct for your insurance needs.</h2>
+        <p class="fancy-text">Please use the link that was texted to your number to access your claim!</p>
+    </Column>
+</Row>
+<Row Class="custom-contant-footer" TextAlignment="TextAlignment.Center">
+    <Column>
+        <p class="fancy-text">Questions? Contact QCS Direct at CONTACT INFORMATION REQUIRED for more information.</p>
+    </Column>
+</Row>
 
-<h1>Hello, world!</h1>
+<style>
+    html {
+        height: 100%;
+    }
 
-Welcome to your new app.
+    .custom-contant-footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        margin: 0px;
+        font-style: italic;
+        font-size: smaller;
+    }
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    .information {
+        padding: 20px;
+    }
+</style>
