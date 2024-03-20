@@ -297,8 +297,9 @@ namespace QCSMobile2024.Shared.Services
                     var easResponse = await _http.PostAsJsonAsync("api/EAS_Inbound", inbound);
                 }
 
+
                 // Await the task if it's not null, otherwise return a completed Task
-                //await (addFnolAttachmentsTask != null ? addFnolAttachmentsTask : Task.CompletedTask).ConfigureAwait(false);
+                await (addFnolAttachmentsTask != null ? addFnolAttachmentsTask : Task.CompletedTask).ConfigureAwait(false);
                 await (addPhotosExpressAttachmentsTask != null ? addPhotosExpressAttachmentsTask : Task.CompletedTask).ConfigureAwait(false);
 
                 // Send the Email
@@ -349,12 +350,15 @@ namespace QCSMobile2024.Shared.Services
                 // Set Signature to the signature attachment
                 FnolViewModel.Signature = _mapper.Map(fnolAttachments.Where(file => file.Description == "Signature").FirstOrDefault(), FnolViewModel.Signature);
 
-                // Set FastTrackSummaryPdf to the FastTrackSummary attachment
-                FnolViewModel.FastTrackSummaryPdf = _mapper.Map(fnolAttachments.Where(file => file.Description == "FastTrack").FirstOrDefault(), FnolViewModel.FastTrackSummaryPdf);
+               
 
                 // Try to match Fnol_Attachments to their corresponding place in the image list.
                 if (fnolAttachments != null)
                 {
+                    // Set FastTrackSummaryPdf to the FastTrackSummary attachment
+                    var fastTrackAttachment = fnolAttachments?.FirstOrDefault(file => file.Description != null && file.Description.Contains("FastTrack"));
+                    FnolViewModel.FastTrackSummaryPdf = _mapper.Map(fastTrackAttachment, FnolViewModel.FastTrackSummaryPdf);
+
                     foreach (Fnol_Attachments fileAttachment in fnolAttachments)
                     {
                         var matchingImage = FnolViewModel.FnolImageList.FirstOrDefault(image => image.Title == fileAttachment.Description);

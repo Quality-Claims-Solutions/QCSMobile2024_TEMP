@@ -21,6 +21,7 @@ Log.Info($"I'm alive. {DateTime.Now}");
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<Db>(options =>
 {
