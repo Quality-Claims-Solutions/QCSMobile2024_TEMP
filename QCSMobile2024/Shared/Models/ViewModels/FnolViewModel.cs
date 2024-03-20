@@ -96,13 +96,13 @@ namespace QCSMobile2024.Shared.Models.ViewModels
 
         public string? CarrierProgramCodeIconPath { get; set; }
 
-        public List<NoteViewModel> Notes { get; set; }
+        public List<NoteViewModel>? Notes { get; set; }
 
         public List<FileAttachmentViewModel>? FnolImageList { get; set; } 
 
-        public FileAttachmentViewModel Signature { get; set; }
+        public FileAttachmentViewModel? Signature { get; set; }
 
-        public FileAttachmentViewModel FastTrackSummaryPdf { get; set; }
+        public FileAttachmentViewModel? FastTrackSummaryPdf { get; set; }
 
         public void InitializeImages()
         {

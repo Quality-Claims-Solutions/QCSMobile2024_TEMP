@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>QCS Fast Track</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet" data-embed="">
+
+    <style>
+        .fancy-text {
+            font-family: 'ComicSans', sans-serif;
+        }
+
+        .heading {
+            text-decoration: underline;
+            color: black;
+        }
+
+        .logo {
+            height: 50px; /* Set the desired fixed height */
+            width: auto;
+            object-fit: contain;
+            position: absolute;
+            top: 0;
+        }
+
+        #logo1 {
+            left: 0;
+        }
+
+        #logo2 {
+            right: 0;
+        }
+
+        .photos {
+            width: 70%;
+        }
+
+        table.InfoTable {
+            text-align: left;
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .photo {
+            text-align: center;
+            font-size: 1.3rem;
+            color: #333;
+            text-decoration: underline;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .hbar {
+            width: 100%;
+            background: #999;
+            height: 2px;
+        }
+
+        table.SubHeaderTable {
+            table-layout: fixed;
+            width: 100%;
+            text-align: center;
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+            table.SubHeaderTable td {
+                vertical-align: top;
+            }
+
+        .column {
+            width: calc(30% - 10px);
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 10px;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+        }
+
+            .photo-grid div {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 150px;
+            }
+
+            .photo-grid img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+            }
+
+        .photo-label {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* So email address wrap */
+        .InfoTable td {
+            word-break: break-all;
+        }
+
+
+        .header {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .date-time {
+            text-align: right;
+            font-size: 1rem;
+            color: #666;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div class="header fancy-text">QCS Fast Track</div>
+    <img class="logo" src="[QCSLogo]" id="logo1">
+    <img class="logo hide" src="[CarrierLogo]" id="logo2">
+    <br />
+    <table class="SubHeaderTable fancy-text">
+        <tr>
+            <td class="column">
+                <table class="InfoTable">
+                    <tr class="heading">
+                        <td colspan="2">[ClaimantOrInsured] Info</td>
+                    </tr>
+                    <tr>
+                        <td>[ClaimantOrInsuredFirstName] [ClaimantOrInsuredLastName]</td>
+                    </tr>
+                    <tr>
+                        <td>[ClaimantOrInsuredPhoneNumber]</td>
+                    </tr>
+                    <tr>
+                        <td>[ClaimantOrInsuredEmail]</td>
+                    </tr>
+                    <tr>
+                        <td> [ClaimantOrInsuredAddress] <br /> [ClaimantOrInsuredCity] [ClaimantOrInsuredState] [ClaimantOrInsuredZip]</td>
+                    </tr>
+                </table>
+            </td>
+
+            <td class="column">
+                <table class="InfoTable">
+                    <tr class="heading">
+                        <td colspan="2">Contact Info</td>
+                    </tr>
+                    <tr>
+                        <td>[ContactFirstName] [ContactLastName]</td>
+                    </tr>
+                    <tr>
+                        <td>[ContactPhoneNumber]</td>
+                    </tr>
+                    <tr>
+                        <td>[ContactEmail]</td>
+                    </tr>
+                    <tr>
+                        <td> [ContactAddress] <br /> [ContactCity] [ContactState] [ContactZip]</td>
+                    </tr>
+                </table>
+            </td>
+
+            <td class="column">
+                <table class="InfoTable">
+                    <tr class="heading">
+                        <td>
+                            Vehicle
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">[VehicleYear] [VehicleMake] [VehicleModel]</td>
+                    </tr>
+                    <tr>
+                        <td style="text-transform: uppercase;">
+                            [VehicleVin]
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <div class="date-time fancy-text">
+        [DateTime]
+    </div>
+    <div class="hbar"></div>
+    <br />
+    <div class="photo-grid fancy-text">
+        <div>
+            <img class="hide" src="[Photo0]" alt="[Label0]">
+            <div class="photo-label">[Label0]</div>
+        </div>
+        <div>
+            <img class="hide" src="[Photo1]" alt="[Label1]">
+            <div class="photo-label">[Label1]</div>
+        </div>
+        <div>
+            <img class="hide" src="[Photo2]" alt="[Label2]">
+            <div class="photo-label">[Label2]</div>
+        </div>
+        <div>
+            <img class="hide" src="[Photo3]" alt="[Label3]">
+            <div class="photo-label">[Label3]</div>
+        </div>
+        <div>
+            <img class="hide" src="[Photo4]" alt="[Label4]">
+            <div class="photo-label">[Label4]</div>
+        </div>
+        <div>
+            <img class="hide" src="[Photo5]" alt="[Label5]">
+            <div class="photo-label">[Label5]</div>
+        </div>
+        <div>
+            <img class="hide" src="[Photo6]" alt="[Label6]">
+            <div class="photo-label">[Label6]</div>
+        </div>
+        <div>
+            <img class="hide" src="[Photo7]" alt="[Label7]">
+            <div class="photo-label">[Label7]</div>
+        </div>
+        <div>
+            <img class="hide" src="[Photo8]" alt="[Label8]">
+            <div class="photo-label">[Label8]</div>
+        </div>
+    </div>
+    <br />
+    <div class="fancy-text" >
+        Signature: [Signature]
+    </div>
+    <div class="hbar"></div>
+</body>
+</html>
