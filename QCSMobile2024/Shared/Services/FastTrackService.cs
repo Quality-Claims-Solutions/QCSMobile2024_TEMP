@@ -297,6 +297,7 @@ namespace QCSMobile2024.Shared.Services
                     var easResponse = await _http.PostAsJsonAsync("api/EAS_Inbound", inbound);
                 }
 
+
                 // Await the task if it's not null, otherwise return a completed Task
                 await (addFnolAttachmentsTask != null ? addFnolAttachmentsTask : Task.CompletedTask).ConfigureAwait(false);
                 await (addPhotosExpressAttachmentsTask != null ? addPhotosExpressAttachmentsTask : Task.CompletedTask).ConfigureAwait(false);
