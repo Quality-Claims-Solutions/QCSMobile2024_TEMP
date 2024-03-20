@@ -1,7 +1,7 @@
 ﻿using QCSMobile2024.Shared.Models.ViewModels;
 using QCSMobile2024.Shared.Utilities;
 
-namespace QCSMobile2024.Utilities
+namespace QCSMobile2024.Server.Utilities
 {
     public class PDFGenerator
     {
@@ -17,15 +17,15 @@ namespace QCSMobile2024.Utilities
             if (template != null)
             {
                 template = template.Replace("[QCSLogo]", qcsLogo);
-                if(fnol.CarrierProgramCodeIcon != null)
+                if (fnol.CarrierProgramCodeIcon != null)
                 {
                     string carrierLogoImage = Convert.ToBase64String(fnol.CarrierProgramCodeIcon);
-                    template = template.Replace("<img class=\"logo hide\" src=\"[CarrierLogo]\" id=\"logo2\">", $"<img class=\"logo hide\" src=\"data:image/jpeg;base64,{carrierLogoImage}\" id=\"logo2\">"); 
+                    template = template.Replace("<img class=\"logo hide\" src=\"[CarrierLogo]\" id=\"logo2\">", $"<img class=\"logo hide\" src=\"data:image/jpeg;base64,{carrierLogoImage}\" id=\"logo2\">");
                 }
-               
+
 
                 //Checks if we have enough Claimant information otherwise displays Insured info
-                if (String.IsNullOrEmpty(fnol.ClaimantLastName) && String.IsNullOrEmpty(fnol.ClaimantPhone) && String.IsNullOrEmpty(fnol.ClaimantEmail))
+                if (string.IsNullOrEmpty(fnol.ClaimantLastName) && string.IsNullOrEmpty(fnol.ClaimantPhone) && string.IsNullOrEmpty(fnol.ClaimantEmail))
                 {
                     template = template.Replace("[ClaimantOrInsured]", "Insured");
                     template = template.Replace("[ClaimantOrInsuredFirstName]", fnol.InsuredFirstName);
@@ -55,7 +55,7 @@ namespace QCSMobile2024.Utilities
                 template = template.Replace("[ContactPhoneNumber]", PhoneFormatter.FormatPhoneNumber(fnol.ContactPrimaryPhone ?? ""));
                 template = template.Replace("[ContactEmail]", fnol.ContactPrimaryEmail);
                 template = template.Replace("[ContactAddress]", fnol.ContactAddress);
-                template = template.Replace("[ContactCity]", fnol.ContactCity != null ? fnol.ContactCity +"," : "");
+                template = template.Replace("[ContactCity]", fnol.ContactCity != null ? fnol.ContactCity + "," : "");
                 template = template.Replace("[ContactState]", fnol.ContactState != null ? fnol.ContactState + "," : "");
                 template = template.Replace("[ContactZip]", fnol.ContactZip);
                 //Vehicle

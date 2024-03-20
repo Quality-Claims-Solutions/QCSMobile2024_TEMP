@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using log4net;
 using Microsoft.AspNetCore.Mvc;
+using QCSMobile2024.Server.Utilities;
 using QCSMobile2024.Shared.Models;
 using QCSMobile2024.Shared.Models.ViewModels;
-using QCSMobile2024.Utilities;
 using System.Runtime.CompilerServices;
 
 namespace QCSMobile2024.Controllers
