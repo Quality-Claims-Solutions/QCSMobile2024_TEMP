@@ -1,19 +1,38 @@
-﻿using QCSMobile2024.Shared.Models.ViewModels;
+﻿using AutoMapper;
+using log4net;
+using QCSMobile2024.Shared.Models;
+using QCSMobile2024.Shared.Models.ViewModels;
 using QCSMobile2024.Shared.Utilities;
+using static System.Net.WebRequestMethods;
 
 namespace QCSMobile2024.Server.Utilities
 {
     public class PDFGenerator
     {
-        public static string GetFastTrackPdf(FnolViewModel fnol)
+        private  readonly ILog Log;
+
+        public PDFGenerator( ILog logger)
         {
+            Log = logger;
+
+        }
+        public string GetFastTrackPdf(FnolViewModel fnol)
+        {
+            Log.Info($"GetFastTrackPdf:START: First.");
+
             string folderName = "Assets";
+            Log.Info($"First.");
             string[] subdirectories = Directory.GetDirectories(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, folderName, SearchOption.AllDirectories);
+            Log.Info($"Second.");
+
             string fullPathToFolder = subdirectories.FirstOrDefault();
+            Log.Info($"Third.");
 
             string templateFile = Path.Combine(fullPathToFolder, "FastTrackPdf.html");
+            Log.Info($"Fourth.");
+
             string qcsLogo = Path.Combine(fullPathToFolder, "Logo.png");
-            var template = File.ReadAllText(templateFile);
+            var template = System.IO.File.ReadAllText(templateFile);
             if (template != null)
             {
                 template = template.Replace("[QCSLogo]", qcsLogo);

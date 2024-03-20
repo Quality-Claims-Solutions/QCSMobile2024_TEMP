@@ -36,6 +36,7 @@ namespace QCSMobile2024.Controllers
             Log.Info($"PdfController_{MethodName()}:START: Create PDF for Fnol with Id: {viewModel.FnolID}.");
             try
             {
+                PDFGenerator PDFGenerator = new PDFGenerator(Log);//remove and moake PDFGenerator static afterwards
                 string htmlString = PDFGenerator.GetFastTrackPdf(viewModel);
 
                 if (htmlString != null)
