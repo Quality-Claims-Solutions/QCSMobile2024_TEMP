@@ -23,7 +23,7 @@ namespace QCSMobile2024.Controllers
         [HttpPost("FnolAttachment")]
         public async Task<ActionResult<List<UploadResult>>> UploadFnolFile(List<IFormFile> files)
         {
-            Log.Info($"FileController{MethodName()}:START. Uploading {files.Count} files");
+            Log.Info($"FileController_{MethodName()} START: Uploading {files.Count} files");
 
             List<UploadResult> result = new List<UploadResult>();
             string? filePath;
@@ -43,7 +43,7 @@ namespace QCSMobile2024.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"We encountered an error uploading file {file.FileName} to {filePath}. Exception: {ex.Message}.");
+                    Log.Error($"FileController_{MethodName()} ERROR: Error uploading file {file.FileName} to {filePath}. Exception: {ex.Message}.");
                     uploadStatus = false;
                 }
                 finally
@@ -56,8 +56,10 @@ namespace QCSMobile2024.Controllers
                         ErrorCode = 0
                     });
                 }
+                Log.Info($"FileController_{MethodName()} Uploading a file");
+
             }
-            Log.Info($"FileController{MethodName()}:END. Uploaded {result.Count} files");
+            Log.Info($"FileController_{MethodName()} RETURN: Uploaded {result.Count} files");
 
             return Ok(result);
         }
@@ -65,7 +67,7 @@ namespace QCSMobile2024.Controllers
         [HttpPost("PhotosExpressAttachment")]
         public async Task<ActionResult<List<UploadResult>>> UploadPhotosExpressFile(List<IFormFile> files)
         {
-            Log.Info($"FileController{MethodName()}:START. Uploading {files.Count} files");
+            Log.Info($"FileController_{MethodName()} START: Uploading {files.Count} files");
 
             List<UploadResult> result = new List<UploadResult>();
             string? filePath;
@@ -85,7 +87,8 @@ namespace QCSMobile2024.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"We encountered an error uploading file {file.FileName} to {filePath}. Exception: {ex.Message}.");
+                    Log.Error($"FileController_{MethodName()} ERROR: Error uploading file {file.FileName} to {filePath}. Exception: {ex.Message}.");
+
                     uploadStatus = false;
                 }
                 finally
@@ -98,8 +101,10 @@ namespace QCSMobile2024.Controllers
                         ErrorCode = 0
                     });
                 }
+                Log.Info($"FileController_{MethodName()} Uploading a file");
             }
-            Log.Info($"FileController{MethodName()}:END. Uploaded {result.Count} files");
+            Log.Info($"FileController_{MethodName()} RETURN: Uploaded {result.Count} files");
+
 
             return Ok(result);
         }
@@ -108,25 +113,33 @@ namespace QCSMobile2024.Controllers
         [HttpGet("{filePath}")]
         public async Task<IActionResult> DownloadFile(string filePath)
         {
-            Log.Info($"FileController{MethodName()}:START.");
-
-            Image image;
-
-            // Get around passing slashes in the URL
-            filePath = filePath.Replace("__", "\\");
-
-            var fullPath = Path.Combine($"\\\\192.168.29.94\\qcs_Files", filePath);
-
-            var memoryStream = new MemoryStream();
-            using (var stream = new FileStream(fullPath, FileMode.Open))
+            Log.Info($"FileController_{MethodName()} START: Downloading file");
+            try
             {
-                await stream.CopyToAsync(memoryStream).ConfigureAwait(false);
+                Image image;
+
+                // Get around passing slashes in the URL
+                filePath = filePath.Replace("__", "\\");
+
+                var fullPath = Path.Combine($"\\\\192.168.29.94\\qcs_Files", filePath);
+
+                var memoryStream = new MemoryStream();
+                using (var stream = new FileStream(fullPath, FileMode.Open))
+                {
+                    await stream.CopyToAsync(memoryStream).ConfigureAwait(false);
+                }
+
+                memoryStream.Position = 0;
+
+                Log.Info($"FileController_{MethodName()} RETURN: Downloaded file");
+
+                return File(memoryStream, "application/octet-stream", Path.GetFileName(fullPath));
             }
-
-            memoryStream.Position = 0;
-            Log.Info($"FileController{MethodName()}:END.");
-
-            return File(memoryStream, "application/octet-stream", Path.GetFileName(fullPath));
+            catch (Exception ex)
+            {
+                Log.Error($"FileController_{MethodName()} ERROR: Error Downloading file. Exception: {ex.Message}.");
+                return null;
+            }
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using log4net;
+using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Paddings;
 using Org.BouncyCastle.Crypto.Parameters;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace QCSMobile2024.Controllers
@@ -12,12 +14,22 @@ namespace QCSMobile2024.Controllers
     [ApiController]
     public class EncryptionController : ControllerBase
     {
+        private readonly ILog Log;
+
+        public EncryptionController(ILog logger)
+        {
+            Log = logger;
+        }
+        static string MethodName([CallerMemberName] string name = null) => name;
+
         Byte[] IV = System.Text.ASCIIEncoding.ASCII.GetBytes("B320B7CB59814aca8392775B67CD8BE8");
         string key = "DDBDF52E79BB415290726F205C986062";
 
         [HttpGet("decrypt/{stringToDecrypt}")]
         public async Task<ActionResult> Decrypt(string stringToDecrypt)
         {
+            Log.Info($"EncryptionController_{MethodName()} START: Decrypting");
+
             // Replace characters to remove URL safety.
             stringToDecrypt = stringToDecrypt.Replace('-', '+').Replace('_', '/');
             byte[] cipherTextBytes = Convert.FromBase64String(stringToDecrypt);
@@ -32,12 +44,15 @@ namespace QCSMobile2024.Controllers
             int length = cipher.ProcessBytes(cipherTextBytes, 0, cipherTextBytes.Length, comparisonBytes, 0);
             cipher.DoFinal(comparisonBytes, length);
 
+            Log.Info($"EncryptionController_{MethodName()} RETURN: Finished Decrypting");
             return Ok(Encoding.ASCII.GetString(comparisonBytes).TrimEnd('\0'));
         }
 
         [HttpGet("encrypt")]
         public async Task<ActionResult> Encrypt(string stringToEncrypt)
         {
+            Log.Info($"EncryptionController_{MethodName()} START: Encrypting");
+
             var keyBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(key);
             var engine = new RijndaelEngine(256);
             var blockCipher = new CbcBlockCipher(engine);
@@ -56,6 +71,7 @@ namespace QCSMobile2024.Controllers
                                   .Replace('+', '-')
                                   .Replace('/', '_');
 
+            Log.Info($"EncryptionController_{MethodName()} RETURN: Finished Encrypting");
             return Ok(base64UrlSafeString);
         }
     }

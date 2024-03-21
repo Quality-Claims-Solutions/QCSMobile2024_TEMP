@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using QCSMobile2024.Shared.Models;
 using QCSMobile2024.Shared.Models.EntityModels;
+using System.Runtime.CompilerServices;
 
 namespace QCSMobile2024.Controllers
 {
@@ -19,15 +20,17 @@ namespace QCSMobile2024.Controllers
             Log = logger;
         }
 
+        static string MethodName([CallerMemberName] string name = null) => name;
+
         [HttpPost]
         public async Task<IActionResult> CreateEASInbound(EAS_Inbound inbound)
         {
-            Log.Info($"START: Create EAS Inbound.");
+            Log.Info($"EAS_InboundController_{MethodName()} START: Creating EAS Inbound with Id: {inbound.Id}");
 
             _db.EAS_Inbound.Add(inbound);
             await _db.SaveChangesAsync();
 
-            Log.Info($"RETURN: Successfully inserted EAS Inbound {inbound.Id}.");
+            Log.Info($"EAS_InboundController_{MethodName()} RETURN: Successfully inserted EAS Inbound with Id: {inbound.Id}.");
             return Ok(inbound);
         }
     }

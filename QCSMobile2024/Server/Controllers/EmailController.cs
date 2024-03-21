@@ -5,6 +5,7 @@ using QCSMobile2024.Shared.Models.CustomModels;
 using log4net;
 using System.Net;
 using System.Text;
+using System.Runtime.CompilerServices;
 
 namespace QCSMobile2024.Controllers
 {
@@ -22,10 +23,13 @@ namespace QCSMobile2024.Controllers
             Log = logger;
         }
 
+        static string MethodName([CallerMemberName] string name = null) => name;
+
         [HttpPost]
         public async Task<ActionResult> SendEmail(ZeptoEmail zeptoEmail)
         {
-            Log.Info($"START: Sending Email.");
+            Log.Info($"EmailController_{MethodName()} START: Sending Email");
+
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
             var baseAddress = "https://api.zeptomail.com/v1.1/email";
 
@@ -44,10 +48,12 @@ namespace QCSMobile2024.Controllers
                 string filePath = zeptoEmail.Attachments.FirstOrDefault().FilePath; 
                 byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
                 base64Content = Convert.ToBase64String(fileBytes);
+                Log.Info($"EmailController_{MethodName()}  Converted File to Base64");
+
             }
             catch (Exception ex)
             {
-                Log.Error($"We encountered an error retreiving a file. {ex.Message}.");
+                Log.Error($"EmailController_{MethodName()} ERROR: Retreiving a file. Exception: {ex.Message}.");
                 return BadRequest();
             }
             zeptoEmail.Attachments[0].Content = base64Content;
@@ -61,6 +67,7 @@ namespace QCSMobile2024.Controllers
             Stream newStream = http.GetRequestStream();
             newStream.Write(bytes, 0, bytes.Length);
             newStream.Close();
+            Log.Info($"EmailController_{MethodName()} Wrote Stream,");
 
             try
             {
@@ -69,12 +76,12 @@ namespace QCSMobile2024.Controllers
                 var stream = response.GetResponseStream();
                 var sr = new StreamReader(stream);
                 var content = sr.ReadToEnd();
-
+                Log.Info($"EmailController_{MethodName()} RETURN: Email Sent");
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                Log.Error($"We encountered an error sending an email. Exception: {ex.Message}.");
+                Log.Error($"EmailController_{MethodName()} ERROR: Sending Email, Exception: {ex.Message}.");
             }
 
             return BadRequest();

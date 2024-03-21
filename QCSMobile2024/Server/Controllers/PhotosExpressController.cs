@@ -25,18 +25,18 @@ namespace QCSMobile2024.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(PhotosExpress photosExpress)
         {
-            Log.Info($"PhotosExpressController_{MethodName()}:START: Posting PhotosExpress.");
+            Log.Info($"PhotosExpressController_{MethodName()} START: Posting PhotosExpress with id: {photosExpress.PhotosExpressID}.");
             try
             {
                 _db.PhotosExpress.Add(photosExpress);
                 await _db.SaveChangesAsync();
 
-                Log.Info($"RETURN: Added PhotosExpress with Id: {photosExpress.PhotosExpressID}.");
+                Log.Info($"PhotosExpressController_{MethodName()} RETURN: Added PhotosExpress with Id: {photosExpress.PhotosExpressID}.");
                 return Ok(photosExpress.PhotosExpressID);
             }
             catch (Exception ex)
             {
-                Log.Error($"We encountered an error in Posting a PhotosExpress. Exception: {ex.Message}");
+                Log.Error($"PhotosExpressController_{MethodName()} ERROR: We encountered an error in Posting the PhotosExpress with id: {photosExpress.PhotosExpressID}. Exception: {ex.Message}");
                 return BadRequest();
             }
         }

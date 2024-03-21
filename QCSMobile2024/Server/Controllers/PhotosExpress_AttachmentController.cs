@@ -30,7 +30,7 @@ namespace QCSMobile2024.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(List<FileAttachmentViewModel> images)
         {
-            Log.Info($"PhotosExpress_AttachmentController_{MethodName()}:START: Posting Attachments.");
+            Log.Info($"PhotosExpress_AttachmentController_{MethodName()} START: Posting Attachments.");
             try
             {
                 var photosExpresssAttachment =  _mapper.Map<List<PhotosExpress_Attachment>>( images );
@@ -38,12 +38,12 @@ namespace QCSMobile2024.Controllers
 
                 await _db.SaveChangesAsync();
 
-                Log.Info($"RETURN: Added PhotosExpressAttachment.");
+                Log.Info($"PhotosExpress_AttachmentController_{MethodName()} RETURN: Added PhotosExpressAttachment.");
                 return Ok();
             }
             catch (Exception ex)
             {
-                Log.Error($"We encountered an error in Posting PhotosExpress_Attachments. Exception: {ex.Message}");
+                Log.Error($"PhotosExpress_AttachmentController_{MethodName()} ERROR: We encountered an error in Posting PhotosExpress_Attachments. Exception: {ex.Message}");
                 return BadRequest();
             }
         }

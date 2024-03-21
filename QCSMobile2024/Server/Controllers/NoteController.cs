@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QCSMobile2024.Shared.Models;
 using QCSMobile2024.Shared.Models.EntityModels;
+using System.Runtime.CompilerServices;
 
 namespace QCSMobile2024.Controllers
 {
@@ -19,10 +20,13 @@ namespace QCSMobile2024.Controllers
             Log = logger;
         }
 
+        static string MethodName([CallerMemberName] string name = null) => name;
+
+
         [HttpGet("fnol/{fnolId}")]
         public async Task<ActionResult> GetNotesByFnolId(int fnolId)
         {
-            Log.Info($"START: Get Notes by FnolId {fnolId}.");
+            Log.Info($"NoteController_{MethodName()} START: Get Notes associated FnolId: {fnolId}");
 
             var query = from n in _db.Note
                         join u in _db.User on n.UserID equals u.UserID into userJoin
@@ -39,7 +43,7 @@ namespace QCSMobile2024.Controllers
 
             var results = await query.ToListAsync();
 
-            Log.Info($"Found notes for FnolId {fnolId}.");
+            Log.Info($"NoteController_{MethodName()} RETURN: Found {results.Count} Notes associated FnolId: {fnolId}");
 
             return Ok(results);
         }
@@ -47,6 +51,8 @@ namespace QCSMobile2024.Controllers
         [HttpPost]
         public async Task<ActionResult<Note>> CreateNote(Note note)
         {
+            Log.Info($"NoteController_{MethodName()} START: Creating Note");
+
             _db.Note.Add(note);
             try
             {
@@ -54,15 +60,17 @@ namespace QCSMobile2024.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error($"We encountered an exception while writing the note. Exception: {ex.Message}");
+                Log.Error($"NoteController_{MethodName()} ERROR: We encountered an exception while writing the note. Exception: {ex.Message}");
             }
+
+            Log.Info($"NoteController_{MethodName()} RETURN: Created Note by {note.Author} which says: {note.NoteText}");
             return Ok(note);
         }
 
         [HttpPut("{photosExpressId}")]
         public async Task<ActionResult<Note>> UpdatePhotosExpressNote(int photosExpressId, [FromBody] decimal fnolId)
         {
-            Log.Info($"Start: Updating photosExpressNote");
+            Log.Info($"NoteController_{MethodName()} START: Updating photosExpressNote with photosExpressId: {photosExpressId} and fnolId: {fnolId}");
             try
             {
                 var noteList = await _db.Note.Where(note => note.FnolId == fnolId && !String.IsNullOrEmpty(note.NoteText)).ToListAsync();
@@ -71,12 +79,13 @@ namespace QCSMobile2024.Controllers
 
                 _db.UpdateRange(noteList);
                 await _db.SaveChangesAsync();
-                Log.Info($"Return: Finishinged updating photosExpressNote");
             }
             catch (Exception ex)
             {
-                Log.Error($"We encountered an exception while writing the note. Exception: {ex.Message}");
+                Log.Error($"NoteController_{MethodName()} ERROR: We encountered an exception while Updating photosExpressNote with photosExpressId: {photosExpressId} and fnolId: {fnolId}. Exception: {ex.Message}");
             }
+
+            Log.Info($"NoteController_{MethodName()} RETURN: Finishinged updating photosExpressNote");
             return Ok();
         }
     }
