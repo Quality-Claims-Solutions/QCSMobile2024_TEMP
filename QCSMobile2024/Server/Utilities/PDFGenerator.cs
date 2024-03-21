@@ -3,6 +3,7 @@ using log4net;
 using QCSMobile2024.Shared.Models;
 using QCSMobile2024.Shared.Models.ViewModels;
 using QCSMobile2024.Shared.Utilities;
+using System.Reflection;
 using static System.Net.WebRequestMethods;
 
 namespace QCSMobile2024.Server.Utilities
@@ -20,18 +21,14 @@ namespace QCSMobile2024.Server.Utilities
         {
             Log.Info($"GetFastTrackPdf:START: First.");
 
-            string folderName = "Assets";
-            Log.Info($"First.");
-            string[] subdirectories = Directory.GetDirectories(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, folderName, SearchOption.AllDirectories);
-            Log.Info($"Second.");
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"wwwroot\Assets");
+            Log.Info($"Path to the Assets Folder is {path}");
 
-            string fullPathToFolder = subdirectories.FirstOrDefault();
-            Log.Info($"Third.");
+            Log.Info($"Locating files within Asset Folder.");
+            string templateFile = Path.Combine(path, "FastTrackPdf.html");
+            string qcsLogo = Path.Combine(path, "Logo.png");
+            Log.Info($"Files located.");
 
-            string templateFile = Path.Combine(fullPathToFolder, "FastTrackPdf.html");
-            Log.Info($"Fourth.");
-
-            string qcsLogo = Path.Combine(fullPathToFolder, "Logo.png");
             var template = System.IO.File.ReadAllText(templateFile);
             if (template != null)
             {
@@ -101,6 +98,8 @@ namespace QCSMobile2024.Server.Utilities
                 template = template.Replace($"[Signature]", $"<img class=\"photos\" src=\"data:image/jpeg;base64,{signatureImage}\" />");
 
             }
+
+            Log.Info($"Sucessfully generated PDF document based on template.");
             return template;
         }
     }
