@@ -25,18 +25,18 @@ namespace QCSMobile2024.Controllers
         [HttpGet("{fnolId}")]
         public async Task<ActionResult> Get(decimal fnolId)
         {
-            Log.Info($"Fnol_AttachmentsController_{MethodName()}:START: Get Fnol_Attachments for Fnol Id {fnolId}.");
+            Log.Info($"Fnol_AttachmentsController_{MethodName()} START: Getting Fnol_Attachments.");
 
             try
             {
                 List<Fnol_Attachments> results = await _db.Fnol_Attachments.Where(attachment => attachment.FnolID == fnolId).ToListAsync();
-                Log.Info($"Fnol_AttachmentsController_{MethodName()}:END: Got {results.Count} Fnol_Attachments for Fnol Id {fnolId}.");
+                Log.Info($"Fnol_AttachmentsController_{MethodName()} RETURN: Got {results.Count} Fnol_Attachments.");
 
                 return Ok(results);
             }
             catch (Exception ex)
             {
-                Log.Error($"We encountered an error in getting Fnol_Attachments for FnolId {fnolId}. Exception: {ex.Message}");
+                Log.Error($"Fnol_AttachmentsController_{MethodName()} ERROR: Error Getting Fnol_Attachments, Exception: {ex.Message}.");
                 return BadRequest();
             }
         }
@@ -44,11 +44,11 @@ namespace QCSMobile2024.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(List<Fnol_Attachments> fnol_Attachments)
         {
-            Log.Info($"Fnol_AttachmentsController_{MethodName()}:START: Posting Fnol_Attachments.");
+            Log.Info($"Fnol_AttachmentsController_{MethodName()} START: Posting Fnol_Attachments.");
 
             if (fnol_Attachments.Count == 0)
             {
-                Log.Info("RETURN: Empty attachments list.");
+                Log.Info($"Fnol_AttachmentsController_{MethodName()} RETURN: Empty attachments list.");
                 return BadRequest();
             }
 
@@ -56,12 +56,12 @@ namespace QCSMobile2024.Controllers
             {
                 await _db.Fnol_Attachments.AddRangeAsync(fnol_Attachments);
                 await _db.SaveChangesAsync();
-                Log.Info($"RETURN: Added Fnol_Attachments to Fnol {fnol_Attachments[0].FnolID}.");
+                Log.Info($"Fnol_AttachmentsController_{MethodName()} RETURN: Added Fnol_Attachments to Fnol.");
                 return Ok();
             }
             catch (Exception ex)
             {
-                Log.Error($"RETURN: We encountered an error in Posting a Fnol_Attachments. Exception: {ex.Message}");
+                Log.Error($"Fnol_AttachmentsController_{MethodName()} ERROR: Error Posting Fnol_Attachments, Exception: {ex.Message}.");
                 return BadRequest();
             }
         }

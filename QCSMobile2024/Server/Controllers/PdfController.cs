@@ -33,7 +33,7 @@ namespace QCSMobile2024.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(FnolViewModel viewModel)
         {
-            Log.Info($"PdfController_{MethodName()}:START: Create PDF for Fnol with Id: {viewModel.FnolID}.");
+            Log.Info($"PdfController_{MethodName()} START: Creating PDF for Fnol with Id: {viewModel.FnolID}.");
             try
             {
                 PDFGenerator PDFGenerator = new PDFGenerator(Log);//remove and moake PDFGenerator static afterwards
@@ -47,15 +47,16 @@ namespace QCSMobile2024.Controllers
                     byte[] result = pdf.Stream.ToArray();
                     pdf.Stream.Dispose();
 
-                    Log.Info($"RETURN: Created pdf and sent to server at Fnol_Vehicle & PhotosExpress aswell as added to Database in Fnol_Attachments & PhotosExpress_Attachment.");
+                    Log.Info($"PdfController_{MethodName()} RETURN: Created pdf and sent to server at Fnol_Vehicle & PhotosExpress aswell as added to Database in Fnol_Attachments & PhotosExpress_Attachment.");
                     return Ok(result);
                 }
 
+                Log.Info($"PdfController_{MethodName()} RETURN: pdf was not created, possible error for Fnol with Id: {viewModel.FnolID}.");
                 return NotFound();
             }
             catch (Exception ex)
             {
-                Log.Error($"We encountered an error in creating a PDF for Fnol with Id: {viewModel.FnolID}. Exception: {ex.Message}");
+                Log.Error($"PdfController_{MethodName()} ERROR: We encountered an error in creating a PDF for Fnol with Id: {viewModel.FnolID}. Exception: {ex.Message}");
                 return BadRequest();
             }
         }

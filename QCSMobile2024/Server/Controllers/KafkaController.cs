@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using QCSMobile2024.Server.Kafka;
 using QCSMobile2024.Shared.Models.CustomModels;
 using QCSMobile2024.Shared.Models.EntityModels;
+using System.Runtime.CompilerServices;
 
 namespace QCSMobile2024.Controllers
 {
@@ -15,10 +16,12 @@ namespace QCSMobile2024.Controllers
         {
             Log = logger;
         }
+        static string MethodName([CallerMemberName] string name = null) => name;
+
         [HttpPost]
         public async Task<ActionResult> PostKafkaUpdate(PhotosExpress photosExpress)
         {
-            Log.Info($"START: Post Kafka Update.");
+            Log.Info($"KafkaController_{MethodName()} START: Post Kafka Update for PhotosExpress with Id: {photosExpress.PhotosExpressID}");
 
             KafkaUpdate? kafkaUpdate = new KafkaUpdate
             {
@@ -36,9 +39,7 @@ namespace QCSMobile2024.Controllers
             };
 
             await KafkaClient.SendUpdate(kafkaUpdate);
-
-            Log.Info($"RETURN: Post Kafka Update successful.");
-
+            Log.Info($"KafkaController_{MethodName()} RETURN: Post Kafka Update successful for PhotosExpress with Id: {photosExpress.PhotosExpressID}");
             return Ok();
         }
     }

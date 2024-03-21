@@ -28,12 +28,12 @@ namespace QCSMobile2024.Controllers
         [HttpGet("{id}")] //Returns FnolViewModel from given Fnol Id
         public async Task<ActionResult<FnolViewModel>> Get(decimal id)
         {
-            Log.Info($"FnolController_{MethodName()}:START");
+            Log.Info($"FnolController_{MethodName()} START: Getting FnolViewModel with Id: {id}");
             try
             {
                 if (_db.Fnol == null)
                 {
-                    Log.Error("Fnol table is null.");
+                    Log.Error($"FnolController_{MethodName()} ERROR: Fnol table is null.");
                     return NotFound();
                 }
 
@@ -100,16 +100,15 @@ namespace QCSMobile2024.Controllers
                         FnolViewModel.CarrierProgramCodeIcon = await System.IO.File.ReadAllBytesAsync(FnolViewModel.CarrierProgramCodeIconPath);
                     }
 
-                    Log.Info($"RETURN: Found Fnol {FnolViewModel.FnolID}.");
+                    Log.Info($"FnolController_{MethodName()} RETURN: Returning FnolViewModel with Id: {id}");
                     return Ok(FnolViewModel);
                 }
-
 
                 return NotFound();
             }
             catch (Exception ex)
             {
-                Log.Error($"We encountered an error in Get with Id: {id}. Exception: {ex.Message}");
+                Log.Error($"FnolController_{MethodName()} ERROR: Error creating FnolViewModel with Id: {id}. Exception: {ex.Message}");
                 return BadRequest();
             }
         }
@@ -118,12 +117,12 @@ namespace QCSMobile2024.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateContactInfo(Fnol fnol)
         {
-            Log.Info($"FnolController_{MethodName()}:START: Update Fnol with Id: {fnol.FnolID}");
+            Log.Info($"FnolController_{MethodName()} START: Update Fnol with Id: {fnol.FnolID}");
             try
             {
                 if (_db.Fnol == null)
                 {
-                    Log.Error("Fnol table is null.");
+                    Log.Error($"FnolController_{MethodName()} ERROR: Fnol table is null.");
                     return NotFound();
                 }
 
@@ -144,13 +143,13 @@ namespace QCSMobile2024.Controllers
                     await _db.SaveChangesAsync();
 
                 }
-                Log.Info($"FnolController_{MethodName()}:END: Updated Fnol with Id: {fnol.FnolID}");
 
+                Log.Info($"FnolController_{MethodName()} RETURN: Updated Fnol with Id: {fnol.FnolID}");
                 return Ok();
             }
             catch (Exception ex)
             {
-                Log.Error($"We encountered an error in Put with Id: {fnol.FnolID}. Exception: {ex.Message}");
+                Log.Error($"FnolController_{MethodName()} ERROR: Error updating FnolViewModel with Id: {fnol.FnolID}. Exception: {ex.Message}");
                 return BadRequest();
             }
         }
