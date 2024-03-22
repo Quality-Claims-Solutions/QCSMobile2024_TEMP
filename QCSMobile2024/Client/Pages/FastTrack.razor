@@ -21,6 +21,10 @@
 @if (Loading)
 {
     <Div Flex="Flex.JustifyContent.Center.AlignContent.Center" class="overlay">
+        @if (IsSubmitted)
+        {
+            <Div Class="submitText">Uploading photos, please wait...</Div>
+        }
         <Div Class="spinner"></Div>
     </Div>
 }
@@ -330,6 +334,15 @@
         height: 100%;
     }
 
+
+    .submitText {
+        font-size: 2rem;
+        color: silver;
+        top: 40%;
+        position: fixed;
+        z-index: 9999;
+    }
+
     .spinner {
         border: 16px solid silver;
         border-top: 16px solid #337AB7;
@@ -342,6 +355,7 @@
         position: fixed;
         z-index: 9999;
     }
+
 
     @@keyframes spin {
         0% {
@@ -369,6 +383,34 @@
         height: 250px !important background-color:orange;
     }
 
+    @@media (max-width: 1000px) {
+
+        .submitText {
+            font-size: 1.5rem;
+            color: silver;
+            position: fixed;
+            z-index: 9999;
+            /* Center horizontally */
+            text-align:center;
+            transform: translateX(-50%);
+            /* Center vertically */
+            top: 43%;
+            transform: translateY(-50%);
+            padding:2rem;
+        }
+
+        .spinner {
+            border: 16px solid silver;
+            border-top: 16px solid #337AB7;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 700ms linear infinite;
+            position: fixed;
+            z-index: 9999;
+            /* Center horizontally */
+            left: 40%;
+        }
 </style>
 
 @code {
