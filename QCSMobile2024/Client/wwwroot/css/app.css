@@ -49,7 +49,7 @@ html, body {
 }
 
 .custom-row-no-margin {
-    margin: 0px;
+    margin: 0px !important;
 }
 
 .custom-card-header {
