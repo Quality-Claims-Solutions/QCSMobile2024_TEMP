@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using log4net;
+﻿using log4net;
 using Microsoft.AspNetCore.Mvc;
-using QCSMobile2024.Shared.Models;
 using QCSMobile2024.Shared.Models.CustomModels;
-using SixLabors.ImageSharp;
 using System.Runtime.CompilerServices;
 
 namespace QCSMobile2024.Controllers
@@ -15,15 +12,16 @@ namespace QCSMobile2024.Controllers
         private readonly ILog Log;
 
         public FileController(ILog logger)
-         { 
+        { 
             Log = logger;
         }
+
         static string MethodName([CallerMemberName] string name = null) => name;
 
         [HttpPost("FnolAttachment")]
         public async Task<ActionResult<List<UploadResult>>> UploadFnolFile(List<IFormFile> files)
         {
-            Log.Info($"FileController_{MethodName()} START: Uploading {files.Count} files");
+            Log.Info($"FileController_{MethodName()} START: Uploading {files.Count} files.");
 
             List<UploadResult> result = new List<UploadResult>();
             string? filePath;
@@ -31,6 +29,8 @@ namespace QCSMobile2024.Controllers
 
             foreach (var file in files)
             {
+                Log.Info($"Uploading file {file.FileName}.");
+
                 filePath = Path.Combine($"\\\\192.168.29.94\\qcs_Files\\Fnol_Vehicle", file.FileName);
                 uploadStatus = false;
 
@@ -39,6 +39,7 @@ namespace QCSMobile2024.Controllers
                     await using FileStream fs = new(filePath, FileMode.Create);
                     await file.CopyToAsync(fs);
 
+                    Log.Info($"File {file.FileName} uploaded successfully.");
                     uploadStatus = true;
                 }
                 catch (Exception ex)
@@ -48,6 +49,8 @@ namespace QCSMobile2024.Controllers
                 }
                 finally
                 {
+                    Log.Info($"File {file.FileName} added to upload result. Successful upload: {uploadStatus}");
+
                     result.Add(new UploadResult()
                     {
                         Uploaded = uploadStatus,
@@ -59,7 +62,9 @@ namespace QCSMobile2024.Controllers
                 Log.Info($"FileController_{MethodName()} Uploading a file");
 
             }
-            Log.Info($"FileController_{MethodName()} RETURN: Uploaded {result.Count} files");
+            Log.Info($"FileController{MethodName()}:END. Uploaded {result.Count} files");
+
+            Log.Info($"FileController_{MethodName()} RETURN: Uploaded {result.Where(result => result.Uploaded).Count()} files. Failed to upload {result.Where(result => result.Uploaded == false).Count()} files.");
 
             return Ok(result);
         }
@@ -67,7 +72,7 @@ namespace QCSMobile2024.Controllers
         [HttpPost("PhotosExpressAttachment")]
         public async Task<ActionResult<List<UploadResult>>> UploadPhotosExpressFile(List<IFormFile> files)
         {
-            Log.Info($"FileController_{MethodName()} START: Uploading {files.Count} files");
+            Log.Info($"FileController_{MethodName()} START. Uploading {files.Count} files.");
 
             List<UploadResult> result = new List<UploadResult>();
             string? filePath;
@@ -75,6 +80,8 @@ namespace QCSMobile2024.Controllers
 
             foreach (var file in files)
             {
+                Log.Info($"Uploading file {file.FileName}.");
+
                 filePath = Path.Combine($"\\\\192.168.29.94\\qcs_Files\\PhotosExpress", file.FileName);
                 uploadStatus = false;
 
@@ -83,6 +90,8 @@ namespace QCSMobile2024.Controllers
                     await using FileStream fs = new(filePath, FileMode.Create);
                     await file.CopyToAsync(fs);
 
+                    Log.Info($"File {file.FileName} uploaded successfully.");
+
                     uploadStatus = true;
                 }
                 catch (Exception ex)
@@ -93,6 +102,8 @@ namespace QCSMobile2024.Controllers
                 }
                 finally
                 {
+                    Log.Info($"File {file.FileName} added to upload result. Successful upload: {uploadStatus}");
+
                     result.Add(new UploadResult()
                     {
                         Uploaded = uploadStatus,
@@ -103,8 +114,8 @@ namespace QCSMobile2024.Controllers
                 }
                 Log.Info($"FileController_{MethodName()} Uploading a file");
             }
-            Log.Info($"FileController_{MethodName()} RETURN: Uploaded {result.Count} files");
 
+            Log.Info($"FileController_{MethodName()} RETURN: Uploaded {result.Where(result => result.Uploaded).Count()} files. Failed to upload {result.Where(result => result.Uploaded == false).Count()} files.");
 
             return Ok(result);
         }
@@ -121,7 +132,7 @@ namespace QCSMobile2024.Controllers
                 // Get around passing slashes in the URL
                 filePath = filePath.Replace("__", "\\");
 
-                var fullPath = Path.Combine($"\\\\192.168.29.94\\qcs_Files", filePath);
+            var fullPath = Path.Combine($"\\\\192.168.29.94\\qcs_Files", filePath);
 
                 var memoryStream = new MemoryStream();
                 using (var stream = new FileStream(fullPath, FileMode.Open))
@@ -129,9 +140,9 @@ namespace QCSMobile2024.Controllers
                     await stream.CopyToAsync(memoryStream).ConfigureAwait(false);
                 }
 
-                memoryStream.Position = 0;
+            memoryStream.Position = 0;
 
-                Log.Info($"FileController_{MethodName()} RETURN: Downloaded file");
+            Log.Info($"FileController_{MethodName()} RETURN: File {filePath}.");
 
                 return File(memoryStream, "application/octet-stream", Path.GetFileName(fullPath));
             }
