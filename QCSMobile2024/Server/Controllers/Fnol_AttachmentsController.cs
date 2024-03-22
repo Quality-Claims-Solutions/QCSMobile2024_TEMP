@@ -25,7 +25,7 @@ namespace QCSMobile2024.Controllers
         [HttpGet("{fnolId}")]
         public async Task<ActionResult> Get(decimal fnolId)
         {
-            Log.Info($"Fnol_AttachmentsController_{MethodName()} START: Getting Fnol_Attachments.");
+            Log.Info($"Fnol_AttachmentsController_{MethodName()} START: Getting Fnol_Attachments for FnolId: {fnolId}.");
 
             try
             {
