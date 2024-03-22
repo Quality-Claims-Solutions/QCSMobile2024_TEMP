@@ -127,8 +127,6 @@ namespace QCSMobile2024.Controllers
             Log.Info($"FileController_{MethodName()} START: Downloading file");
             try
             {
-                Image image;
-
                 // Get around passing slashes in the URL
                 filePath = filePath.Replace("__", "\\");
 
