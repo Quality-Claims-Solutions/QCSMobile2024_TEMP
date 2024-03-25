@@ -438,19 +438,19 @@ namespace QCSMobile2024.Shared.Services
                     },
                 Subject = $"FastTrack Initiated, {System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(viewModel.ContactFirstName.ToLower().Trim())}!",
                 HtmlBody =
-                    @$"<div>Your FastTrack claim {viewModel.InsuredVehicleVin} has been initiated! Download the attachment to see a summary.</div><br /><br /><br /><br />
-<div><i>Questions or comments?  Contact Quality Claims Solutions at FILL IN CONTACT INFORMATION </i></div>
-<div><i>Please do not respond to this email, as the inbox is not tracked.</i></div>",
+                    @$" <div>Your FastTrack claim {viewModel.InsuredVehicleVin} has been initiated! Download the attachment to see a summary.</div><br /><br /><br /><br />
+                        <div><i>Questions or comments?  Contact Quality Claims Solutions at 877-237-3727 </i></div>
+                        <div><i>Please do not respond to this email, as the inbox is not tracked.</i></div>",
                 Attachments =
                     new List<ZeptoAttachment>
                     {
-                new ZeptoAttachment
-                {
-                    Content = "", // Base64 string, filled out in controller
-                    MimeType = "application/pdf",
-                    Name = "FastTrackSummary.pdf",
-                    FilePath = fastTrackSummaryPdf.Path
-                }
+                        new ZeptoAttachment
+                        {
+                            Content = "", // Base64 string, filled out in controller
+                            MimeType = "application/pdf",
+                            Name = "FastTrackSummary.pdf",
+                            FilePath = fastTrackSummaryPdf.Path
+                        }
                     }
             };
 
