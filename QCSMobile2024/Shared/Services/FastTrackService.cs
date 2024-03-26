@@ -223,10 +223,30 @@ namespace QCSMobile2024.Shared.Services
                 if (viewModel.FastTrackFeatureTier >= 1)
                 {
                     // Step 1: Generate the PDF and add to the file list.
-                    var pdfResponse1 = await _http.PostAsJsonAsync(pdfPath, viewModel);
+                    var pdfResponse = await _http.PostAsJsonAsync(pdfPath, viewModel);
 
-                    string? responseAsString = pdfResponse1.Content.ReadAsStringAsync().Result.Replace("\"", string.Empty);
-                    byte[] pdfBytes = Convert.FromBase64String(responseAsString);
+                    string? responseAsString = pdfResponse.Content.ReadAsStringAsync().Result.Replace("\"", string.Empty);
+                    byte[] pdfBytes =null;
+
+                    try
+                    {
+                        if (pdfResponse.IsSuccessStatusCode)
+                        {
+                            using (var stream = await pdfResponse.Content.ReadAsStreamAsync())
+                            {
+                                using (var memoryStream = new MemoryStream())
+                                {
+                                    await stream.CopyToAsync(memoryStream);
+                                    pdfBytes = memoryStream.ToArray();
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"FastTrackService_{MethodName()}: pdfBytes Line {ex.Message}.");
+                    }
+
 
                     // Build list for table insertion
                     var pdfFile = new FileAttachmentViewModel
