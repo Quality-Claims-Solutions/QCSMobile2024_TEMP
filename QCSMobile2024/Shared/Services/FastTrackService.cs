@@ -91,7 +91,7 @@ namespace QCSMobile2024.Shared.Services
             catch (Exception ex)
             {
                 Log.Error($"FastTrackService_{MethodName()}: Encountered an exception. {ex.Message}.");
-                throw new Exception("An error occurred while adding FNOL attachments.");
+                throw new Exception($"FastTrackService_{MethodName()}: Encountered an exception. {ex.Message}.");
             }
 
         }
@@ -99,66 +99,74 @@ namespace QCSMobile2024.Shared.Services
 
         private async Task AddPhotosExpressAttachments(List<FileAttachmentViewModel> attachmentList)
         {
-            Log.Information($"FastTrackService_{MethodName()}: Start.");
-
-            using var fileContentList = new MultipartFormDataContent();
-            var attachmentTableList = new List<PhotosExpress_Attachment>();
-            foreach (var file in attachmentList.Where(file => !string.IsNullOrEmpty(file.FileName)))
+            try
             {
-                // Ensure files have an extension, so at least we get an error if they're used.
-                var fileName = file.FileName;
-                if (Path.GetExtension(fileName) == null)
+                Log.Information($"FastTrackService_{MethodName()}: Start.");
+
+                using var fileContentList = new MultipartFormDataContent();
+                var attachmentTableList = new List<PhotosExpress_Attachment>();
+                foreach (var file in attachmentList.Where(file => !string.IsNullOrEmpty(file.FileName)))
                 {
-                    fileName += ".pdf";
+                    // Ensure files have an extension, so at least we get an error if they're used.
+                    var fileName = file.FileName;
+                    if (Path.GetExtension(fileName) == null)
+                    {
+                        fileName += ".pdf";
+                    }
+
+                    if (fileName.Contains(".pdf"))
+                    {
+                        file.ChangeTypeId = 2; // New
+                        file.PhotosExpressAttachmentTypeID = 23; // Document
+                    }
+
+                    // Checks server location avoid name duplication
+                    var uniqueFileName = FileNamer.GetUniqueFileName("\\\\192.168.29.94\\qcs_Files\\PhotosExpress", fileName);
+
+                    // Build list for table insertion
+                    var claimFile = new PhotosExpress_Attachment
+                    {
+                        DateEntered = DateTime.Now,
+                        PhotosExpressID = file.PhotosExpressId.Value,
+                        ChangeTypeID = (int)file.ChangeTypeId,
+                        PhotosExpressAttachmentTypeID = (int)file.PhotosExpressAttachmentTypeID,
+                        FileName = fileName,
+                        Path = uniqueFileName,
+                        AddedBy = "Owner"
+                    };
+                    attachmentTableList.Add(claimFile);
+
+                    // Build list for file copy to server location
+                    var fileContent = new StreamContent(new MemoryStream(file.Stream));
+                    fileContentList.Add
+                    (
+                        content: fileContent,
+                        name: "\"files\"",
+                        fileName: uniqueFileName
+                    );
                 }
 
-                if (fileName.Contains(".pdf"))
+                if (attachmentTableList.Any() && fileContentList.Any())
                 {
-                    file.ChangeTypeId = 2; // New
-                    file.PhotosExpressAttachmentTypeID = 23; // Document
+                    // Copy files to Server Location.
+                    var attachmentPostResponse = await _http.PostAsync($"api/file/PhotosExpressAttachment", fileContentList).ConfigureAwait(false);
+                    var uploadResults = await attachmentPostResponse.Content.ReadFromJsonAsync<List<UploadResult>>();
+
+                    // Filter the list down to only the ones that were successfully uploaded to the server location.
+                    List<PhotosExpress_Attachment> successfulAttachments = attachmentTableList
+                        .Where(attachment => uploadResults.Any(result => result.FileName == attachment.Path && result.Uploaded))
+                        .ToList();
+
+                    //Added succesfully uploaded files to PhotosExpress_Attachment table
+                    var attachmentResponse = await _http.PostAsJsonAsync<List<PhotosExpress_Attachment>>($"api/PhotosExpress_Attachment", successfulAttachments).ConfigureAwait(false);
                 }
-
-                // Checks server location avoid name duplication
-                var uniqueFileName = FileNamer.GetUniqueFileName("\\\\192.168.29.94\\qcs_Files\\PhotosExpress", fileName);
-
-                // Build list for table insertion
-                var claimFile = new PhotosExpress_Attachment
-                {
-                    DateEntered = DateTime.Now,
-                    PhotosExpressID = file.PhotosExpressId.Value,
-                    ChangeTypeID = (int)file.ChangeTypeId,
-                    PhotosExpressAttachmentTypeID = (int)file.PhotosExpressAttachmentTypeID,
-                    FileName = fileName,
-                    Path = uniqueFileName,
-                    AddedBy = "Owner"
-                };
-                attachmentTableList.Add(claimFile);
-
-                // Build list for file copy to server location
-                var fileContent = new StreamContent(new MemoryStream(file.Stream));
-                fileContentList.Add
-                (
-                    content: fileContent,
-                    name: "\"files\"",
-                    fileName: uniqueFileName
-                );
+                Log.Information($"FastTrackService_{MethodName()}: END.");
             }
-
-            if (attachmentTableList.Any() && fileContentList.Any())
+            catch (Exception ex)
             {
-                // Copy files to Server Location.
-                var attachmentPostResponse = await _http.PostAsync($"api/file/PhotosExpressAttachment", fileContentList).ConfigureAwait(false);
-                var uploadResults = await attachmentPostResponse.Content.ReadFromJsonAsync<List<UploadResult>>();
-
-                // Filter the list down to only the ones that were successfully uploaded to the server location.
-                List<PhotosExpress_Attachment> successfulAttachments = attachmentTableList
-                    .Where(attachment => uploadResults.Any(result => result.FileName == attachment.Path && result.Uploaded))
-                    .ToList();
-
-                //Added succesfully uploaded files to PhotosExpress_Attachment table
-                var attachmentResponse = await _http.PostAsJsonAsync<List<PhotosExpress_Attachment>>($"api/PhotosExpress_Attachment", successfulAttachments).ConfigureAwait(false);
+                Log.Error($"FastTrackService_{MethodName()}: Encountered an exception. {ex.Message}.");
+                throw new Exception($"FastTrackService_{MethodName()}: Encountered an exception. {ex.Message}.");
             }
-            Log.Information($"FastTrackService_{MethodName()}: END.");
 
         }
 
@@ -313,8 +321,7 @@ namespace QCSMobile2024.Shared.Services
             catch (Exception ex)
             {
                 Log.Error($"FastTrackService_{MethodName()}: Encountered an exception. {ex.Message}.");
-                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                throw;
+                throw new Exception($"FastTrackService_{MethodName()}: Encountered an exception. {ex.Message}."); 
             }
         }
 
@@ -402,7 +409,7 @@ namespace QCSMobile2024.Shared.Services
             catch (Exception ex)
             {
                 Log.Error($"FastTrackService_{MethodName()}: Encountered an exception. {ex.Message}.");
-                throw;
+                throw new Exception($"FastTrackService_{MethodName()}: Encountered an exception. {ex.Message}."); ;
             }
         }
 

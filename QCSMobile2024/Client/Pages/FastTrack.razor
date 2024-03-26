@@ -260,6 +260,7 @@
         {
             <SignatureHandler Signature="FnolViewModel.Signature" />
         }
+        <h1>@DebugMessage</h1>
     </Row>
 
     @if (!IsSubmitted)
@@ -433,6 +434,8 @@
     bool Loading;
     public List<StateInfo> StateList = DropdownList.GetStateInfo();
 
+    public string DebugMessage = "";
+
     protected override async Task OnInitializedAsync()
     {
 
@@ -510,22 +513,40 @@
             //Update contact info
             if (HasEditedContactInfo)
             {
-                await FastTrackService.SaveFnolChanges(FnolViewModel);
+                try
+                {
+                    await FastTrackService.SaveFnolChanges(FnolViewModel);
+                }
+                catch (Exception ex)
+                {
+                    DebugMessage = ex.Message;
+                    return;
+                }
             }
 
             //Handles FastTrack based on FastTrackFeatureTier
-            var response = await FastTrackService.ApproveFastTrack(FnolViewModel);
+            try
+            {
+                var response = await FastTrackService.ApproveFastTrack(FnolViewModel);
+                //Error on submit
+                if (!response.IsSuccessStatusCode)
+                {
+                    IsSubmitted = false;
+                    SubmissionError = true;
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("/FastTrack/FastTrackSubmitted/" + FnolId);
+                }
+            }
+            catch (Exception ex)
+            {
+                DebugMessage = ex.Message;
+                return;
+            }
+        
 
-            //Error on submit
-            if (!response.IsSuccessStatusCode)
-            {
-                IsSubmitted = false;
-                SubmissionError = true;
-            }
-            else
-            {
-                NavigationManager.NavigateTo("/FastTrack/FastTrackSubmitted/" + FnolId);
-            }
+           
         }
 
         Loading = false;
