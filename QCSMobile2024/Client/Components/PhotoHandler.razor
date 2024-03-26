@@ -16,10 +16,6 @@
                 {
                     <Icon Name="IconName.CheckCircle" Class="has-image-checkbox" />
                 }
-                @if (CurrentImageIndex == 0)
-                {
-                    <div class="no-image-warning">SELECTED</div>
-                }
                 <Button Type="ButtonType.Button" Clicked="()=>SetCurrentImage(0)" Class="@ImageList[0].ThumbnailHtmlClass" id="@ImageList[0].ThumbnailHtmlId">@ImageList[0].Title</Button>
             </Column>
             <Column Class="image-thumbnail-col">
