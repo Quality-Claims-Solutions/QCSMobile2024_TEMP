@@ -88,9 +88,9 @@ namespace QCSMobile2024.Server.Utilities
                     if (fnol.FnolImageList[i].Stream != null && fnol.FnolImageList[i].Stream.Length != 0)
                     {
                         string base64Image = Convert.ToBase64String(fnol.FnolImageList[i].Stream);
-                        template = template.Replace($"<div class=\"photo-label\">[Label{i}]</div>", $"<td>{fnol.FnolImageList[i].Title}</td>");
+                        template = template.Replace($"[Label{i}]", $"{fnol.FnolImageList[i].Title}");
 
-                        template = template.Replace($"<img class=\"hide\" src=\"[Photo{i}]\" alt=\"[Label{i}]\">", $"<td><img class=\"photos\" src=\"data:image/jpeg;base64,{base64Image}\" /></td>");
+                        template = template.Replace($"class=\"hide\" src=\"[Photo{i}]\"", $" src=\"data:image/jpeg;base64,{base64Image}\"");
                     }
                 }
 

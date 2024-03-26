@@ -13,6 +13,7 @@
         .heading {
             text-decoration: underline;
             color: black;
+            font-size: 1.1rem !important;
         }
 
         .logo {
@@ -98,23 +99,32 @@
                 object-fit: contain;
             }
 
-        .photo-label {
-            text-align: center;
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 5px;
+        .photo-container {
+            position: relative;
+            margin: 0 auto; /* Center it */
         }
+
+            .photo-container .photo-label {
+                position: absolute; 
+                top: 0; 
+                background: rgb(0, 0, 0); 
+                background: rgba(0, 0, 0, 0.5); 
+                color: #f1f1f1; 
+                width: 100%; 
+                height: 12%;
+            }
 
         /* So email address wrap */
         .InfoTable td {
             word-break: break-all;
+            font-size: .9rem;
         }
 
 
         .header {
             text-align: center;
-            font-size: 2rem;
-            margin-bottom: 20px;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
         }
 
         .logo-container {
@@ -184,7 +194,7 @@
                 <table class="InfoTable">
                     <tr class="heading">
                         <td>
-                            Vehicle
+                            Vehicle Info
                         </td>
                     </tr>
                     <tr>
@@ -205,39 +215,39 @@
     <div class="hbar"></div>
     <br />
     <div class="photo-grid fancy-text">
-        <div>
+        <div class="photo-container">
             <img class="hide" src="[Photo0]" alt="[Label0]">
             <div class="photo-label">[Label0]</div>
         </div>
-        <div>
+        <div class="photo-container">
             <img class="hide" src="[Photo1]" alt="[Label1]">
             <div class="photo-label">[Label1]</div>
         </div>
-        <div>
+        <div class="photo-container">
             <img class="hide" src="[Photo2]" alt="[Label2]">
             <div class="photo-label">[Label2]</div>
         </div>
-        <div>
+        <div class="photo-container">
             <img class="hide" src="[Photo3]" alt="[Label3]">
             <div class="photo-label">[Label3]</div>
         </div>
-        <div>
+        <div class="photo-container">
             <img class="hide" src="[Photo4]" alt="[Label4]">
             <div class="photo-label">[Label4]</div>
         </div>
-        <div>
+        <div class="photo-container">
             <img class="hide" src="[Photo5]" alt="[Label5]">
             <div class="photo-label">[Label5]</div>
         </div>
-        <div>
+        <div class="photo-container">
             <img class="hide" src="[Photo6]" alt="[Label6]">
             <div class="photo-label">[Label6]</div>
         </div>
-        <div>
+        <div class="photo-container">
             <img class="hide" src="[Photo7]" alt="[Label7]">
             <div class="photo-label">[Label7]</div>
         </div>
-        <div>
+        <div class="photo-container">
             <img class="hide" src="[Photo8]" alt="[Label8]">
             <div class="photo-label">[Label8]</div>
         </div>

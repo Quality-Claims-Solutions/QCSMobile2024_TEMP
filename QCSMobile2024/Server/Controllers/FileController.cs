@@ -27,6 +27,14 @@ namespace QCSMobile2024.Controllers
             string? filePath;
             bool uploadStatus;
 
+            var now = DateTime.Now;
+            var dateFolder = $"{now.Year}\\{now.Month}\\{now.Day}";
+            string todaysFolder = Path.Combine($"\\\\192.168.29.94\\qcs_Files\\Fnol_Vehicle", dateFolder);
+            if (!Directory.Exists(todaysFolder))
+            {
+                Directory.CreateDirectory(todaysFolder);
+            }
+
             foreach (var file in files)
             {
                 Log.Info($"Uploading file {file.FileName}.");
@@ -77,6 +85,15 @@ namespace QCSMobile2024.Controllers
             List<UploadResult> result = new List<UploadResult>();
             string? filePath;
             bool uploadStatus;
+
+            var now = DateTime.Now;
+            var dateFolder = $"{now.Year}\\{now.Month}\\{now.Day}";
+            string todaysFolder = Path.Combine($"\\\\192.168.29.94\\qcs_Files\\PhotosExpress", dateFolder);
+            if (!Directory.Exists(todaysFolder))
+            {
+                Directory.CreateDirectory(todaysFolder);
+            }
+
 
             foreach (var file in files)
             {
