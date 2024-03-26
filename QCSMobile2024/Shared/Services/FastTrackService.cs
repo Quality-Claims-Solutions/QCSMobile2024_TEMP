@@ -225,7 +225,6 @@ namespace QCSMobile2024.Shared.Services
                     // Step 1: Generate the PDF and add to the file list.
                     var pdfResponse = await _http.PostAsJsonAsync(pdfPath, viewModel);
 
-                    string? responseAsString = pdfResponse.Content.ReadAsStringAsync().Result.Replace("\"", string.Empty);
                     byte[] pdfBytes =null;
 
                     try
